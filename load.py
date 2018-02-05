@@ -22,13 +22,13 @@ def plugin_stop():
 
 def plugin_prefs(parent, cmdr, is_beta):
     frame = nb.Frame(parent)
-    nb.Label(frame, text="Select materials you need").grid()
+    nb.Label(frame, text="Select materials you want").grid()
     this.settings = {}
     selected = config.get("matgrindr.selected") or []
     for mat in this.mats.names():
         v = mat in selected
         settings[mat] = tk.IntVar(v)
-        chk = nb.Checkbutton(parent, text=mat, variable=this.settings[mat]).grid()
+        chk = nb.Checkbutton(frame, text=mat, variable=this.settings[mat]).grid(sticky=tk.W)
     return frame
 
 def prefs_changed(cmdr, is_beta):
@@ -47,7 +47,7 @@ def plugin_app(parent):
     nb.Label(this.status_frame, text="Heading").grid(row=1, column=0, sticky=tk.W)
     this.heading = nb.Label(this.status_frame, text="***").grid(row=1, column=1)
     nb.Label(this.status_frame, text="Attitude").grid(row=1, column=2, sticky=tk.W)
-    this.attitude = nb.label(this.status_frame, text="000").grid(row=1, column=3)
+    this.attitude = nb.Label(this.status_frame, text="000").grid(row=1, column=3)
     return this.status_frame
 
 def journal_entry(cmdr, is_beta, system, station, entry, state):
