@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import mats
+import events
 import os
 import Tkinter as tk
 import myNotebook as nb
@@ -42,4 +43,5 @@ def plugin_app(parent):
     return this.status_frame
 
 def journal_entry(cmdr, is_beta, system, station, entry, state):
+        
     pass
