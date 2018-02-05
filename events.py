@@ -41,7 +41,7 @@ class EventEngine():
         Decides what we should do given a new journal event. Returns either
         None or an Action event
         """
-        if entry['event'] in ['FSDJump', 'StartUp'] and 'StarPos' in entry and 'StarSystem' in entry:
+        if entry['event'] in ['FSDJump', 'StartUp', 'Location'] and 'StarPos' in entry and 'StarSystem' in entry:
             closest = self.materials.closest(entry['StarPos'], self.requirements)
             if closest and closest['system'] == entry['StarSystem']:
                 return Action(show_planet=1)  
