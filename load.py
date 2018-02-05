@@ -7,8 +7,12 @@ import Tkinter as tk
 import myNotebook as nb
 from config import config
 import sys
+import Queue
+import status_watcher
 
 this = sys.modules[__name__]	# For holding module globals
+
+this.status_queue = Queue.Queue()
 
 def local_file(name):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
@@ -18,7 +22,20 @@ def plugin_start():
     return "Matgrindr"
 
 def plugin_stop():
-    pass
+    if this.watcher:
+        this.watcher.stop()
+        this.watcher.join()
+
+def update():
+    try:
+        while True:
+            status = this.status_queue.get_nowait()
+            this.lat.set(str(status['Latitude']))
+            this.lon.set(str(status['Longitude']))
+            this.status_frame.update_idletasks()
+    except Queue.Empty:
+        pass
+    this.status_frame.after(100, update)
 
 def plugin_prefs(parent, cmdr, is_beta):
     frame = nb.Frame(parent)
@@ -32,6 +49,7 @@ def plugin_prefs(parent, cmdr, is_beta):
         this.settings[mat] = tk.IntVar()
         this.settings[mat].set(v)
         chk = nb.Checkbutton(frame, text=mat, variable=this.settings[mat]).grid(sticky=tk.W)
+
     return frame
 
 def prefs_changed(cmdr, is_beta):
@@ -44,13 +62,23 @@ def prefs_changed(cmdr, is_beta):
 def plugin_app(parent):
     this.status_frame = nb.Frame(parent)
     nb.Label(this.status_frame, text="Lat").grid(row=0, column = 0, sticky=tk.W)
-    this.lat = nb.Label(this.status_frame, text="---").grid(row=0, column = 1)
+    this.lat = tk.StringVar()
+    nb.Label(this.status_frame, textvariable=this.lat).grid(row=0, column = 1, sticky=tk.W)
+
     nb.Label(this.status_frame, text="Lon").grid(row=0, column = 2, sticky=tk.W)
-    this.lon = nb.Label(this.status_frame, text="===").grid(row=0, column = 3)
+    this.lon = tk.StringVar()
+    nb.Label(this.status_frame, textvariable=this.lon).grid(row=0, column = 3)
+
     nb.Label(this.status_frame, text="Heading").grid(row=1, column=0, sticky=tk.W)
-    this.heading = nb.Label(this.status_frame, text="***").grid(row=1, column=1)
+    this.heading = tk.StringVar()
+    nb.Label(this.status_frame, textvariable=this.heading).grid(row=1, column=1)
     nb.Label(this.status_frame, text="Attitude").grid(row=1, column=2, sticky=tk.W)
-    this.attitude = nb.Label(this.status_frame, text="000").grid(row=1, column=3)
+    this.attitude = tk.StringVar()
+    nb.Label(this.status_frame, textvariable=this.attitude).grid(row=1, column=3)
+    this.watcher = status_watcher.StatusWatcher(local_file("status.json"), this.status_queue)
+    this.watcher.daemon = True
+    this.watcher.start()
+    parent.after(100, update)
     return this.status_frame
 
 def journal_entry(cmdr, is_beta, system, station, entry, state):
