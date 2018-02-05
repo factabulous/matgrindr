@@ -15,7 +15,7 @@ def local_file(name):
 
 def plugin_start():
     this.mats = mats.Materials(local_file("mats.json"))
-    return "matgrindr"
+    return "Matgrindr"
 
 def plugin_stop():
     pass
