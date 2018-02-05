@@ -9,4 +9,11 @@
   "materials": [ "Carbon", "Iron", "Nickel", "Phosphorus", "Sulphur", 
     "Chromium", "Manganese", "Zirconium", "Mercury", "Tungsten", 
     "Antimony" ]
+},
+{ "system": "2MASS J10433563-5945136", "body": "1 a", 
+  "lat": -65.5780, "lon": 165.2446,
+  "x": 8613.09375,
+  "y": -122.53125,
+  "z": 2710.09375,
+  "materials": ["Iron","Sulphur","Carbon", "Nickel","Phosphorus","Chromium", "Manganese", "Germanium", "Antimony", "Tin", "Mercury"]
 }]

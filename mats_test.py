@@ -8,11 +8,12 @@ class MaterialsTest(unittest.TestCase):
         m = mats.Materials("mats_test.json")
         self.assertEqual(set([ "Carbon", "Iron", "Nickel", "Phosphorus", "Sulphur",
     "Chromium", "Manganese", "Zirconium", "Mercury", "Tungsten",
-    "Antimony" ]), m.names())
+    "Antimony", "Tin", "Germanium" ]), m.names())
 
     def test_closest(self):
         m = mats.Materials("mats_test.json")
-        self.assertEquals( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Tungsten'])['system'])
+        self.assertEqual( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Tungsten'])['system'])
+        self.assertEqual( '2MASS J10433563-5945136', m.closest([0, 0, 0], ['Germanium'])['system'])
 
 if __name__ == "__main__":
     unittest.main()
