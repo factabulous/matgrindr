@@ -1,0 +1,13 @@
+# Sample! Will be changed to pull real data at some point
+[
+{ "system": "164 G. Canis Majoris", 
+  "body": "5 c a", 
+  "x": 484.125i, 
+  "y": -31, 
+  "z": -311.03125,
+  "lat": -4.8631,
+  "lon": 3.0394,
+  "materials": [ "Carbon", "Iron", "Nickel", "Phosphorus", "Sulphur", 
+    "Chromium", "Manganese", "Zirconium", "Mercury", "Tungsten", 
+    "Antimony" ]
+}]
