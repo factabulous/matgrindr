@@ -30,7 +30,7 @@ class NoneVisited():
     def is_visited(self, loc):
         return False
 
-    def visited(self, loc):
+    def set_visited(self, loc):
         self._captured_visit = loc
 
     def captured_visit(self):

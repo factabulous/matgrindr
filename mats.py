@@ -48,13 +48,13 @@ class Materials():
             return None
 
         for m in self.materials:
-            if m['system'] == loc['system'] and m['body'] == loc['planet'] and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
+            if m['system'] == loc['system'] and m['body'] == loc['body'] and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
                 return m
         return None
 
-    def local( self, system, planet):
+    def local( self, system, body):
         """
-        Returns all the locations on the given planet that have not already
+        Returns all the locations on the given body that have not already
         been visited.
 
         Returns a list - can be empty, but not None
@@ -63,7 +63,7 @@ class Materials():
         locs = []
         
         for m in self.materials:
-            if m['system'] == system and m['body'] == planet and not self.visited.is_visited(m):
+            if m['system'] == system and m['body'] == body and not self.visited.is_visited(m):
                 locs.append(m)
         return locs
 

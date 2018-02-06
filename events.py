@@ -32,7 +32,7 @@ class EventEngine():
                 target = self.materials.matches(loc)
                 if not self.visited.is_visited(loc) and target:
                     mats = set(target['materials']).intersection(self.requirements)
-                    self.visited.visited(loc)
+                    self.visited.set_visited(loc)
                     return ("Collect",",".join(mats))
         if entry['event'] in ['SupercruiseExit'] and 'StarSystem' in entry and 'Body' in entry and 'BodyType' in entry:
             if entry['BodyType'] == 'Planet':

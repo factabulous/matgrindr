@@ -55,19 +55,19 @@ class MaterialsTest(unittest.TestCase):
 
     def test_matches(self):
         m = mats.Materials("mats_test.json", NoneVisited())
-        self.assertTrue( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '165 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c b', "lat": -4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": 4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 7.0394 }))
+        self.assertTrue( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '165 G. Canis Majoris', 'body': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c b', "lat": -4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": 4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": -4.8631, "lon": 7.0394 }))
         
     def test_matches_all_visited(self):
         m = mats.Materials("mats_test.json", AllVisited())
-        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
 
     def test_local(self):
         """
-        Check we can get all the local sites (on the same planet) 
+        Check we can get all the local sites (on the same body) 
         """
         m = mats.Materials("mats_test.json", NoneVisited())
         self.assertTrue( m.local( '164 G. Canis Majoris', '5 c a'))
@@ -75,7 +75,7 @@ class MaterialsTest(unittest.TestCase):
 
     def test_local(self):
         """
-        Check we can get all the local sites (on the same planet) 
+        Check we can get all the local sites (on the same body) 
         """
         m = mats.Materials("mats_test.json", AllVisited())
         self.assertFalse( m.local( '164 G. Canis Majoris', '5 c a'))

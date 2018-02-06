@@ -32,10 +32,10 @@ def dbgScExit5cd():
     journal_entry("Cmdr", True, "164 G. Canis Majoris", "5 c d", {'event': 'SupercruiseExit', 'StarSystem': '164 G. Canis Majoris', 'Body': '5 c d', 'BodyType': 'Planet'}, {})
 
 def dbgTouchdownIn():
-    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': -5, 'Longitude': 3}, {})
+    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': -5, 'Longitude': 3}, {'StarSystem': '164 G. Canis Majoris', 'Body': '5 c a'})
 
 def dbgTouchdownOut():
-    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': 50, 'Longitude': 30}, {})
+    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': 50, 'Longitude': 30}, {'StarSystem': '164 G. Canis Majoris', 'Body': '5 c a'})
 
 def local_file(name):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)

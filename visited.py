@@ -24,7 +24,7 @@ class Visited():
         """
         return json.dumps(self.visited)
 
-    def visit(self, location, when=time.time()):
+    def set_visited(self, location, when=time.time()):
         """
         Sets a location as visited. Location is expected to be a dict 
         containing system / body / latitude / longitude
