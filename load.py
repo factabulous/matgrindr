@@ -20,6 +20,9 @@ this.status_queue = Queue.Queue()
 this.debug = 0
 
 
+def dbgFsdColonia():
+    journal_entry("Cmdr", True, "Colonia", None, {'event': 'FSDJump', 'StarSystem': 'Colonia', 'StarPos': [ -9530.5 , -910.28125 , 19808.125]}, {})
+
 def dbgFsdCanis():
     journal_entry("Cmdr", True, "164 G. Canis Majoris", None, {'event': 'FSDJump', 'StarSystem': '164 G. Canis Majoris', 'StarPos': [ 484.125 , -31 , -311.03125]}, {})
 
@@ -141,13 +144,17 @@ def plugin_app(parent):
     nb.Label(this.status_frame, textvariable=this.target_attitude).grid(row=3, column=3)
     if this.debug:
         nb.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=4, sticky=tk.W)
-        nb.Button(this.status_frame, text="FSDJump 164 G. Canis Majoris", command=dbgFsdCanis).grid(row=4, column =1, sticky=tk.W)
+        nb.Button(this.status_frame, text="FSDJump Colonia", command=dbgFsdColonia).grid(row=4, column = 1, sticky=tk.W)
+        nb.Button(this.status_frame, text="FSDJump 164 G. Canis Majoris", command=dbgFsdCanis).grid(row=4, column =2, sticky=tk.W)
         nb.Button(this.status_frame, text="SC Exit 5 c d", command=dbgScExit5cd).grid(row=5,column=0,sticky=tk.W)
         nb.Button(this.status_frame, text="SC Exit 5 c a", command=dbgScExit5ca).grid(row=5,column=1,sticky=tk.W)
         nb.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=6,column =0, sticky=tk.W)
         nb.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=6, column =1, sticky=tk.W)
       
-    this.watcher = watcher.StatusWatcher(local_file("status.json"), this.status_queue)
+    this.watcher = watcher.StatusWatcher(
+        # os.path.join( config.default_journal_dir, "status.json"),
+        local_file("status.json"), 
+        this.status_queue)
     this.watcher.daemon = True
     this.watcher.start()
     parent.after(100, update)
