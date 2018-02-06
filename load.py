@@ -17,7 +17,7 @@ this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 
-this.debug = 1
+this.debug = 0
 
 
 def dbgFsdCanis():
@@ -57,10 +57,14 @@ def update():
     try:
         while True:
             status = this.status_queue.get_nowait()
-            this.current_lat.set(str(status['Latitude']))
-            this.current_lon.set(str(status['Longitude']))
-            this.current_heading.set(str(status['Heading']))
+            this.current_lat.set(status['Latitude'])
+            this.current_lon.set(status['Longitude'])
+            this.current_heading.set(status['Heading'])
             this.current_altitude.set(str(status['Altitude']))
+            if this.target_lat.get() and this.current_lat.get():
+                this.target_heading.set( heading.heading(
+                    ( this.current_lat.get(), this.current_lon.get()), 
+                    ( this.target_lat.get(), this.target_lon.get())))
             this.status_frame.update_idletasks()
     except Queue.Empty:
         pass
@@ -105,24 +109,24 @@ def plugin_app(parent):
 
     # Dynamic Current Location
     nb.Label(this.status_frame, text="Current Lat").grid(row=1, column = 0, sticky=tk.W)
-    this.current_lat = tk.StringVar()
+    this.current_lat = tk.DoubleVar()
     nb.Label(this.status_frame, textvariable=this.current_lat).grid(row=1, column = 1, sticky=tk.W)
 
     nb.Label(this.status_frame, text="Current Lon").grid(row=1, column = 2, sticky=tk.W)
-    this.current_lon = tk.StringVar()
+    this.current_lon = tk.DoubleVar()
     nb.Label(this.status_frame, textvariable=this.current_lon).grid(row=1, column = 3)
 
     nb.Label(this.status_frame, text="Target Lat").grid(row=2, column = 0, sticky=tk.W)
-    this.target_lat = tk.StringVar()
+    this.target_lat = tk.DoubleVar()
     nb.Label(this.status_frame, textvariable=this.target_lat).grid(row=2, column = 1, sticky=tk.W)
 
     nb.Label(this.status_frame, text="Target Lon").grid(row=2, column = 2, sticky=tk.W)
-    this.target_lon = tk.StringVar()
+    this.target_lon = tk.DoubleVar()
     nb.Label(this.status_frame, textvariable=this.target_lon).grid(row=2, column = 3)
 
     # Heading
     nb.Label(this.status_frame, text="Current Heading").grid(row=3, column=0, sticky=tk.W)
-    this.current_heading = tk.StringVar()
+    this.current_heading = tk.DoubleVar()
     nb.Label(this.status_frame, textvariable=this.current_heading).grid(row=3, column=1)
     nb.Label(this.status_frame, text="Altitude").grid(row=3, column=2, sticky=tk.W)
     this.current_altitude = tk.StringVar()
