@@ -24,8 +24,10 @@ class EventEngine():
                     'planet': state['Body'],
                     'lat': entry['Latitude'],
                     'lon': entry['Longitude'] }
-                if not self.visited.is_visited(loc) and self.materials.matches(loc):
+                target = self.materials.matches(loc)
+                if not self.visited.is_visited(loc) and target:
+                    mats = set(target['materials']).intersection(self.requirements)
                     self.visited.visited(loc)
-                    return ("Collect",)
+                    return ("Collect",",".join(mats))
                 
         return None
