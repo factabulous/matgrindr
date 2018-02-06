@@ -14,19 +14,19 @@ class EventEngine():
         if entry['event'] in ['FSDJump', 'StartUp', 'Location'] and 'StarPos' in entry and 'StarSystem' in entry:
             closest = self.materials.closest(entry['StarPos'], self.requirements)
             if closest and closest['system'] == entry['StarSystem']:
-                return ("Supercruise to", closest['planet'])
+                return ("Supercruise to", closest['body'])
             return ("Go to", closest['system'])
 
         if entry['event'] in ['Takeoff'] and 'StarPos' in state and 'StarSystem' in state:
             closest = self.materials.closest(state['StarPos'], self.requirements)
             if closest and closest['system'] == state['StarSystem']:
-                return ("Supercruise to", closest['planet'])
+                return ("Supercruise to", closest['body'])
             return ("Go to", closest['system'])
         if entry['event'] in ['Touchdown'] and 'Latitude' in entry and 'Longitude' in entry:
             if 'StarSystem' in state and 'Body' in state:
                 loc = { 
                     'system': state['StarSystem'],
-                    'planet': state['Body'],
+                    'body': state['Body'],
                     'lat': entry['Latitude'],
                     'lon': entry['Longitude'] }
                 target = self.materials.matches(loc)

@@ -4,9 +4,9 @@ import unittest
 import events
 
 class FakeMaterials():
-    def __init__(self, system_name, planet_name = None, lat = 0, lon = 0, mats = []):
+    def __init__(self, system_name, body_name = None, lat = 0, lon = 0, mats = []):
         self.system_name = system_name
-        self.planet_name = planet_name
+        self.body_name = body_name
         self.lat = lat
         self.lon = lon
         self.mats = mats
@@ -14,15 +14,15 @@ class FakeMaterials():
     def closest(self, pos1, pos2):
         if not self.system_name:
             return None
-        return { 'system': self.system_name, 'planet': self.planet_name, 
+        return { 'system': self.system_name, 'body': self.body_name, 
                  'lat': self.lat, 'lon': self.lon, 'materials': self.mats }
 
     def matches(self, loc):
-        return { 'system': self.system_name, 'planet': self.planet_name, 
+        return { 'system': self.system_name, 'body': self.body_name, 
                  'lat': self.lat, 'lon': self.lon, 'materials': self.mats }
 
     def local(self, system, planet):
-        return [ {'system': self.system_name, 'planet': self.planet_name, 
+        return [ {'system': self.system_name, 'body': self.body_name, 
                  'lat': self.lat, 'lon': self.lon, 'materials': self.mats }]
  
 
@@ -80,7 +80,7 @@ class EventsTest(unittest.TestCase):
         visited = NoneVisited()
         ev = events.EventEngine(FakeMaterials('Sol', 'Earth', 13, 67, ['Iron', 'Gold']), ['Gold'], visited)
         self.assertEqual(("Collect","Gold"), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth'} ))
-        self.assertEqual( { 'system': 'Sol', 'planet': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
+        self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
         
     def test_takeoff_event_wrong_system(self):
         """
