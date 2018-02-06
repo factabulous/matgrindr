@@ -11,6 +11,7 @@ import Queue
 import watcher
 import visited
 import plug
+import heading
 
 this = sys.modules[__name__]	# For holding module globals
 
@@ -151,7 +152,7 @@ def plugin_app(parent):
 def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
     if res:
-        plug.show_error("Retrieved " + str(len(res)))
+        #plug.show_error("Retrieved " + str(len(res)))
         this.action.set(res[0] + ' ' + res[1])
         if len(res) > 3:
             # We have a lat / lon
