@@ -39,5 +39,16 @@ class Materials():
             return res[0][1]
         return None
 
+    def matches(self, loc):
+        """
+        Returns the material location for this location, or None if this is 
+        not a known location. lat and lon are allowed to differ slightly
+        """
+        for m in self.materials:
+            if m['system'] == loc['system'] and m['body'] == loc['planet'] and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
+                return m
+        return None
+    
+
 
 

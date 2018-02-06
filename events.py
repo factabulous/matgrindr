@@ -1,40 +1,10 @@
 # -*- coding: utf-8 -*-
 
-class Action():
-    def __init__(self, show_bearing = False, show_system = False, show_planet = False, show_action = False):
-        self._show_bearing = show_bearing
-        self._show_system = show_system
-        self._show_planet = show_planet
-        self._show_action = show_action
-
-    def show_bearing(self):
-        """
-        Should be be showing (and updating) the bearing info?
-        """
-        return self._show_bearing
-
-    def show_system(self):
-        """
-        Should be be showing the system to navigate to?
-        """
-        return self._show_system
-
-    def show_planet(self):
-        """
-        Should we be showing the planet to navigate to?
-        """
-        return self._show_planet
-
-    def show_action(self):
-        """
-        Should we be showing the action to take at the location?
-        """
-        return self._show_action
-
 class EventEngine():
-    def __init__(self, materials, requirements):
+    def __init__(self, materials, requirements, visited):
         self.materials = materials
         self.requirements = requirements
+        self.visited = visited
 
     def process(self, entry, state):
         """
@@ -46,4 +16,16 @@ class EventEngine():
             if closest and closest['system'] == entry['StarSystem']:
                 return ("Supercruise to", closest['planet'])
             return ("Go to", closest['system'])
+
+        if entry['event'] in ['Touchdown'] and 'Latitude' in entry and 'Longitude' in entry:
+            if 'StarSystem' in state and 'Body' in state:
+                loc = { 
+                    'system': state['StarSystem'],
+                    'planet': state['Body'],
+                    'lat': entry['Latitude'],
+                    'lon': entry['Longitude'] }
+                if not self.visited.is_visited(loc) and self.materials.matches(loc):
+                    self.visited.visited(loc)
+                    return ("Collect",)
+                
         return None

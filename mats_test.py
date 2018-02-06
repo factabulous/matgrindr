@@ -53,6 +53,15 @@ class MaterialsTest(unittest.TestCase):
         self.assertIsNone( m.closest([0, 0, 0], ['Tungsten', 'Germanium']))
         self.assertIsNone( m.closest([8000, 0, 3000], ['Tungsten', 'Germanium']))
 
+    def test_matches(self):
+        m = mats.Materials("mats_test.json", NoneVisited())
+        self.assertTrue( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '165 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c b', "lat": -4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": 4.8631, "lon": 3.0394 }))
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 7.0394 }))
+        
+
 if __name__ == "__main__":
     unittest.main()
         
