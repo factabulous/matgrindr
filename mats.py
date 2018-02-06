@@ -44,11 +44,26 @@ class Materials():
         Returns the material location for this location, or None if this is 
         not a known location. lat and lon are allowed to differ slightly
         """
+        if self.visited.is_visited(loc):
+            return None
+
         for m in self.materials:
             if m['system'] == loc['system'] and m['body'] == loc['planet'] and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
                 return m
         return None
-    
 
+    def local( self, system, planet):
+        """
+        Returns all the locations on the given planet that have not already
+        been visited.
 
+        Returns a list - can be empty, but not None
+        """
+
+        locs = []
+        
+        for m in self.materials:
+            if m['system'] == system and m['body'] == planet and not self.visited.is_visited(m):
+                locs.append(m)
+        return locs
 

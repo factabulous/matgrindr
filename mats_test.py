@@ -61,6 +61,24 @@ class MaterialsTest(unittest.TestCase):
         self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": 4.8631, "lon": 3.0394 }))
         self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 7.0394 }))
         
+    def test_matches_all_visited(self):
+        m = mats.Materials("mats_test.json", AllVisited())
+        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'planet': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
+
+    def test_local(self):
+        """
+        Check we can get all the local sites (on the same planet) 
+        """
+        m = mats.Materials("mats_test.json", NoneVisited())
+        self.assertTrue( m.local( '164 G. Canis Majoris', '5 c a'))
+        self.assertFalse( m.local( '164 G. Canis Majoris', '5 c b'))
+
+    def test_local(self):
+        """
+        Check we can get all the local sites (on the same planet) 
+        """
+        m = mats.Materials("mats_test.json", AllVisited())
+        self.assertFalse( m.local( '164 G. Canis Majoris', '5 c a'))
 
 if __name__ == "__main__":
     unittest.main()

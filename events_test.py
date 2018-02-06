@@ -21,6 +21,11 @@ class FakeMaterials():
         return { 'system': self.system_name, 'planet': self.planet_name, 
                  'lat': self.lat, 'lon': self.lon, 'materials': self.mats }
 
+    def local(self, system, planet):
+        return [ {'system': self.system_name, 'planet': self.planet_name, 
+                 'lat': self.lat, 'lon': self.lon, 'materials': self.mats }]
+ 
+
 class NoneVisited():
     def is_visited(self, loc):
         return False
@@ -91,5 +96,12 @@ class EventsTest(unittest.TestCase):
         ev = events.EventEngine(FakeMaterials('Sol', 'Mercury'), None, NoneVisited())
         self.assertEqual(("Supercruise to", "Mercury"), ev.process( { 'event': 'Takeoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
 
+    def test_supercruise_exit_event_correct_planet(self):
+        """
+        test when system and planet match we return a location to visit on 
+        the planet, plus the lat / lon to go to
+        """
+        ev = events.EventEngine(FakeMaterials('Sol', 'Mercury', 12, 88), None, NoneVisited())
+        self.assertEqual(("Fly to", "(12.00, 88.00)", 12, 88), ev.process( { 'event': 'SupercruiseExit', 'StarSystem': 'Sol', 'Body': 'Mercury', 'BodyType': 'Planet'}, {} ))
 if __name__ == '__main__':
     unittest.main()

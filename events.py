@@ -34,5 +34,11 @@ class EventEngine():
                     mats = set(target['materials']).intersection(self.requirements)
                     self.visited.visited(loc)
                     return ("Collect",",".join(mats))
+        if entry['event'] in ['SupercruiseExit'] and 'StarSystem' in entry and 'Body' in entry and 'BodyType' in entry:
+            if entry['BodyType'] == 'Planet':
+                locs = self.materials.local(entry['StarSystem'], entry['Body'])
+                if locs:
+                    loc = locs[0]
+                    return ( 'Fly to', "({:4.2f}, {:4.2f})".format(loc['lat'], loc['lon']), loc['lat'], loc['lon'])
                 
         return None
