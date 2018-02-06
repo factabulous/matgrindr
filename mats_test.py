@@ -61,6 +61,10 @@ class MaterialsTest(unittest.TestCase):
         self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": 4.8631, "lon": 3.0394 }))
         self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": -4.8631, "lon": 7.0394 }))
         
+    def test_matches_case_insensitive(self):
+        m = mats.Materials("mats_test.json", NoneVisited())
+        self.assertTrue( m.matches( { 'system': '164 G. canis majoris', 'body': '5 C A', "lat": -4.8631, "lon": 3.0394 }))
+
     def test_matches_all_visited(self):
         m = mats.Materials("mats_test.json", AllVisited())
         self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": -4.8631, "lon": 3.0394 }))
@@ -73,12 +77,19 @@ class MaterialsTest(unittest.TestCase):
         self.assertTrue( m.local( '164 G. Canis Majoris', '5 c a'))
         self.assertFalse( m.local( '164 G. Canis Majoris', '5 c b'))
 
-    def test_local(self):
+    def test_local_visited(self):
         """
         Check we can get all the local sites (on the same body) 
         """
         m = mats.Materials("mats_test.json", AllVisited())
         self.assertFalse( m.local( '164 G. Canis Majoris', '5 c a'))
+
+    def test_local_case_insensitive(self):
+        """
+        Check we can get all the local sites (on the same body) 
+        """
+        m = mats.Materials("mats_test.json", NoneVisited())
+        self.assertTrue( m.local( '164 G. canis majoris', '5 C A'))
 
 if __name__ == "__main__":
     unittest.main()

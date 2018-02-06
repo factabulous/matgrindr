@@ -48,7 +48,7 @@ class Materials():
             return None
 
         for m in self._materials:
-            if m['system'] == loc['system'] and m['body'] == loc['body'] and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
+            if m['system'].upper() == loc['system'].upper() and m['body'].upper() == loc['body'].upper() and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
                 return m
         return None
 
@@ -63,7 +63,7 @@ class Materials():
         locs = []
         
         for m in self._materials:
-            if m['system'] == system and m['body'] == body and not self._visited.is_visited(m):
+            if m['system'].upper() == system.upper() and m['body'].upper() == body.upper() and not self._visited.is_visited(m):
                 locs.append(m)
         return locs
 
