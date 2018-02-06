@@ -39,11 +39,11 @@ class EventEngine():
     def process(self, entry, state):
         """
         Decides what we should do given a new journal event. Returns either
-        None or an Action event
+        None or a tuple with (Action, Location)
         """
         if entry['event'] in ['FSDJump', 'StartUp', 'Location'] and 'StarPos' in entry and 'StarSystem' in entry:
             closest = self.materials.closest(entry['StarPos'], self.requirements)
             if closest and closest['system'] == entry['StarSystem']:
-                return Action(show_planet=1)  
-            return Action(show_system=1)
+                return ("Supercruise to", closest['planet'])
+            return ("Go to", closest['system'])
         return None
