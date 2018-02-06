@@ -30,21 +30,21 @@ class EventsTest(unittest.TestCase):
 
     def test_fsd_event_correct_system(self):
         """
-        test when systems do not match we ask for the system to show
+        test when systems do match we ask for the planet(s) to show
         """
         ev = events.EventEngine(FakeMaterials('Sol'), None)
         self.assertTrue(ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ).show_planet())
 
     def test_location_event_correct_system(self):
         """
-        test when systems do not match we ask for the system to show
+        test when systems do match we ask for the planet(s) to show
         """
         ev = events.EventEngine(FakeMaterials('Sol'), None)
         self.assertTrue(ev.process( { 'event': 'Location', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ).show_planet())
 
     def test_startup_event_correct_system(self):
         """
-        test when systems do not match we ask for the system to show
+        test when systems do match we ask for the planet(s) to show
         """
         ev = events.EventEngine(FakeMaterials('Sol'), None)
         self.assertTrue(ev.process( { 'event': 'StartUp', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ).show_planet())

@@ -4,7 +4,8 @@ import json
 import math
 
 class Materials():
-    def __init__(self, filename):
+    def __init__(self, filename, visited = None):
+        self.visited = visited
         with open(filename, "rt") as mats_file:
             self.materials = json.load(mats_file)
 
@@ -33,7 +34,7 @@ class Materials():
         list. loc is a tuple / array of x,y,z coords
         """
         mats = set(mats)
-        res = sorted( ( self.distance(mat, loc), mat) for mat in self.materials if set(mat['materials']).intersection(mats))
+        res = sorted( ( self.distance(mat, loc), mat) for mat in self.materials if set(mat['materials']).intersection(mats) and (not self.visited or not self.visited.is_visited(loc)))
         if res:
             return res[0][1]
         return None
