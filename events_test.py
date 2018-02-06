@@ -77,6 +77,19 @@ class EventsTest(unittest.TestCase):
         self.assertEqual(("Collect","Gold"), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth'} ))
         self.assertEqual( { 'system': 'Sol', 'planet': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
         
+    def test_takeoff_event_wrong_system(self):
+        """
+        test when systems do not match we ask for the system to show
+        """
+        ev = events.EventEngine(FakeMaterials('Sol'), None, NoneVisited())
+        self.assertEqual(("Go to", "Sol"), ev.process( { 'event': 'Takeoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
+
+    def test_takeoff_event_correct_system(self):
+        """
+        test when systems do match we ask for the planet(s) to show
+        """
+        ev = events.EventEngine(FakeMaterials('Sol', 'Mercury'), None, NoneVisited())
+        self.assertEqual(("Supercruise to", "Mercury"), ev.process( { 'event': 'Takeoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
 
 if __name__ == '__main__':
     unittest.main()
