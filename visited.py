@@ -14,15 +14,15 @@ class Visited():
        Visits are dict entries containing:
            system / body / latitude / longitude / visit_time
        """
-       self.visited = json.loads(state)
-       self.interval_days = 7
+       self._visited = json.loads(state)
+       self._interval_days = 7
 
     def save(self, when=time.time()):
         """
         Returns a string representation of the visited status such that it
         can be stored in a string
         """
-        return json.dumps(self.visited)
+        return json.dumps(self._visited)
 
     def set_visited(self, location, when=time.time()):
         """

@@ -5,16 +5,16 @@ import math
 
 class Materials():
     def __init__(self, filename, visited = None):
-        self.visited = visited
+        self._visited = visited
         with open(filename, "rt") as mats_file:
-            self.materials = json.load(mats_file)
+            self._materials = json.load(mats_file)
 
     def names(self):
         """
         Return the set of all materials we can find
         """
         res = set()
-        for loc in self.materials:
+        for loc in self._materials:
             res.update(loc['materials'])
         return res
 
@@ -34,7 +34,7 @@ class Materials():
         list. loc is a tuple / array of x,y,z coords
         """
         mats = set(mats)
-        res = sorted( ( self.distance(mat, loc), mat) for mat in self.materials if set(mat['materials']).intersection(mats) and (not self.visited or not self.visited.is_visited(loc)))
+        res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not self._visited or not self._visited.is_visited(loc)))
         if res:
             return res[0][1]
         return None
@@ -44,10 +44,10 @@ class Materials():
         Returns the material location for this location, or None if this is 
         not a known location. lat and lon are allowed to differ slightly
         """
-        if self.visited.is_visited(loc):
+        if self._visited.is_visited(loc):
             return None
 
-        for m in self.materials:
+        for m in self._materials:
             if m['system'] == loc['system'] and m['body'] == loc['body'] and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
                 return m
         return None
@@ -62,8 +62,8 @@ class Materials():
 
         locs = []
         
-        for m in self.materials:
-            if m['system'] == system and m['body'] == body and not self.visited.is_visited(m):
+        for m in self._materials:
+            if m['system'] == system and m['body'] == body and not self._visited.is_visited(m):
                 locs.append(m)
         return locs
 
