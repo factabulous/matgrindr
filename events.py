@@ -13,7 +13,7 @@ class EventEngine():
         """
         if entry['event'] in ['FSDJump', 'StartUp', 'Location'] and 'StarPos' in entry and 'StarSystem' in entry:
             closest = self._materials.closest(entry['StarPos'], self._requirements)
-            if closest and closest['system'] == entry['StarSystem']:
+            if closest and closest['system'].upper() == entry['StarSystem'].upper():
                 return ("Supercruise to", closest['body'])
             return ("Go to", closest['system'])
 
