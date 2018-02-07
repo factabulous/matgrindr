@@ -65,8 +65,11 @@ class Visited():
         Returns True or False
         """
         v = self.find(location)
-        if v and not self.expired(v['at'], when):
-            return True
+        if v:
+	    if self.expired(v['at'], when):
+                return False
+            else:
+	        return True
         return False
         
 
