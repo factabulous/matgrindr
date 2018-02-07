@@ -103,5 +103,6 @@ class EventsTest(unittest.TestCase):
         """
         ev = events.EventEngine(FakeMaterials('Sol', 'Mercury', 12, 88), None, NoneVisited())
         self.assertEqual(("Fly to", "(12.00, 88.00)", 12, 88), ev.process( { 'event': 'SupercruiseExit', 'StarSystem': 'Sol', 'Body': 'Mercury', 'BodyType': 'Planet'}, {} ))
+
 if __name__ == '__main__':
     unittest.main()
