@@ -60,14 +60,15 @@ def update():
     try:
         while True:
             status = this.status_queue.get_nowait()
-            this.current_lat.set(status['Latitude'])
-            this.current_lon.set(status['Longitude'])
-            this.current_heading.set(status['Heading'])
-            this.current_altitude.set(str(status['Altitude']))
-            if this.target_lat.get() and this.current_lat.get():
-                this.target_heading.set( heading.heading(
-                    ( this.current_lat.get(), this.current_lon.get()), 
-                    ( this.target_lat.get(), this.target_lon.get())))
+	    if 'Latitude' in status and 'Longitude' in status:
+                this.current_lat.set(status['Latitude'])
+                this.current_lon.set(status['Longitude'])
+                this.current_heading.set(status['Heading'])
+                this.current_altitude.set(str(status['Altitude']))
+                if this.target_lat.get() and this.current_lat.get():
+                    this.target_heading.set( heading.heading(
+                        ( this.current_lat.get(), this.current_lon.get()), 
+                        ( this.target_lat.get(), this.target_lon.get())))
             this.status_frame.update_idletasks()
     except Queue.Empty:
         pass
@@ -152,8 +153,8 @@ def plugin_app(parent):
         nb.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=6, column =1, sticky=tk.W)
       
     this.watcher = watcher.StatusWatcher(
-        # os.path.join( config.default_journal_dir, "status.json"),
-        local_file("status.json"), 
+        os.path.join( config.default_journal_dir, "status.json"),
+        # local_file("status.json"), 
         this.status_queue)
     this.watcher.daemon = True
     this.watcher.start()

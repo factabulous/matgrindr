@@ -21,9 +21,12 @@ class StatusWatcher(threading.Thread):
             if mtime != last_change:
                 mtime = last_change
                 with open(self.filename, "rt") as status_file:
-                    status = json.load(status_file)
-                    # Report the new status
-                    self.queue.put(status)
+		    try:
+                        status = json.load(status_file)
+                        # Report the new status
+                        self.queue.put(status)
+                    except ValueError:
+		        pass
 
     def stop(self):
         self.stop_me = True

@@ -14,6 +14,9 @@ class EventEngine():
         if entry['event'] in ['FSDJump', 'StartUp', 'Location'] and 'StarPos' in entry and 'StarSystem' in entry:
             closest = self._materials.closest(entry['StarPos'], self._requirements)
             if closest and closest['system'].upper() == entry['StarSystem'].upper():
+                target = self._materials.local(entry['StarSystem'], closest['body'])
+		if target:
+                    return ("Supercruise to", closest['body'], target[0]['lat'], target[0]['lon'])
                 return ("Supercruise to", closest['body'])
             return ("Go to", closest['system'])
 
@@ -30,7 +33,7 @@ class EventEngine():
                     'lat': entry['Latitude'],
                     'lon': entry['Longitude'] }
                 target = self._materials.matches(loc)
-                if not self._visited.is_visited(loc) and target:
+                if target:
                     mats = set(target['materials']).intersection(self._requirements)
                     self._visited.set_visited(loc)
                     return ("Collect",",".join(mats))
