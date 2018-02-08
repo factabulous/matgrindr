@@ -32,11 +32,12 @@ class Materials():
         """
         Returns the closest site that contains any of the materials in the mats
         list. loc is a tuple / array of x,y,z coords
+        Returns a tuple with (distance, loc)
         """
         mats = set(mats)
         res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not self._visited or not self._visited.is_visited(loc)))
         if res:
-            return res[0][1]
+            return res[0]
         return None
 
     def matches(self, loc):

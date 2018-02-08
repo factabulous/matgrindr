@@ -14,8 +14,8 @@ class FakeMaterials():
     def closest(self, pos1, pos2):
         if not self.system_name:
             return None
-        return { 'system': self.system_name, 'body': self.body_name, 
-                 'lat': self.lat, 'lon': self.lon, 'materials': self.mats }
+        return (12, { 'system': self.system_name, 'body': self.body_name, 
+                 'lat': self.lat, 'lon': self.lon, 'materials': self.mats })
 
     def matches(self, loc):
         return { 'system': self.system_name, 'body': self.body_name, 
@@ -50,28 +50,28 @@ class EventsTest(unittest.TestCase):
         test when systems do not match we ask for the system to show
         """
         ev = events.EventEngine(FakeMaterials('Sol'), None, NoneVisited())
-        self.assertEqual(("Go to", "Sol"), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'}, {} ))
+        self.assertEqual(("Go to", "Sol (12.0 Ly)", None, None), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'}, {} ))
 
     def test_fsd_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
         """
         ev = events.EventEngine(FakeMaterials('Sol', 'Mercury'), None, NoneVisited())
-        self.assertEqual(("Supercruise to", "Mercury"), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+        self.assertEqual(("Supercruise to", "Mercury", 0, 0), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
     def test_location_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
         """
         ev = events.EventEngine(FakeMaterials('Sol', 'Venus'), None, NoneVisited())
-        self.assertEqual(("Supercruise to", "Venus"), ev.process( { 'event': 'Location', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+        self.assertEqual(("Supercruise to", "Venus", 0, 0), ev.process( { 'event': 'Location', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
     def test_startup_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
         """
         ev = events.EventEngine(FakeMaterials('Sol', 'Earth'), None, NoneVisited())
-        self.assertEqual(("Supercruise to", "Earth"), ev.process( { 'event': 'StartUp', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+        self.assertEqual(("Supercruise to", "Earth", 0, 0), ev.process( { 'event': 'StartUp', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
     def test_touchdown_at_target(self):
         """
@@ -87,14 +87,14 @@ class EventsTest(unittest.TestCase):
         test when systems do not match we ask for the system to show
         """
         ev = events.EventEngine(FakeMaterials('Sol'), None, NoneVisited())
-        self.assertEqual(("Go to", "Sol"), ev.process( { 'event': 'Takeoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
+        self.assertEqual(("Go to", "Sol (12.0 Ly)", None, None), ev.process( { 'event': 'Takeoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
 
     def test_takeoff_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
         """
         ev = events.EventEngine(FakeMaterials('Sol', 'Mercury'), None, NoneVisited())
-        self.assertEqual(("Supercruise to", "Mercury"), ev.process( { 'event': 'Takeoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
+        self.assertEqual(("Supercruise to", "Mercury", 0, 0), ev.process( { 'event': 'Takeoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
 
     def test_supercruise_exit_event_correct_planet(self):
         """

@@ -24,6 +24,10 @@ class VisitedTest(unittest.TestCase):
         self.assertTrue(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000 + 7 * 24 * 3600))
         self.assertFalse(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=3000 + 7 * 24 * 3600))
 
+    def test_never_visited(self):
+        v = visited.Visited()
+        self.assertFalse(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000))
+
     def test_save(self):
         v = visited.Visited()
         v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, 
@@ -32,6 +36,16 @@ class VisitedTest(unittest.TestCase):
         self.assertNotEqual('[]', v.save(when=1000))
         self.assertEqual('[]', v.save(when=1000 + 7 * 24 * 3600))
 
+
+    def test_is_dirty(self):
+        v = visited.Visited()
+        self.assertFalse(v.is_dirty())
+        v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, 
+                 when = 1000 )
+        self.assertTrue(v.is_dirty())
+        v.save()
+
+        self.assertFalse(v.is_dirty())
 
 if __name__ == '__main__':
     unittest.main()

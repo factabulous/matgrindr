@@ -23,8 +23,8 @@ class MaterialsTest(unittest.TestCase):
         Tests a system is chosen where the mat is present
         """
         m = mats.Materials("mats_test.json", NoneVisited())
-        self.assertEqual( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Tungsten'])['system'])
-        self.assertEqual( '2MASS J10433563-5945136', m.closest([0, 0, 0], ['Germanium'])['system'])
+        self.assertEqual( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Tungsten'])[1]['system'])
+        self.assertEqual( '2MASS J10433563-5945136', m.closest([0, 0, 0], ['Germanium'])[1]['system'])
 
     def test_closest_common_mats(self):
         """
@@ -32,8 +32,8 @@ class MaterialsTest(unittest.TestCase):
         chosen
         """
         m = mats.Materials("mats_test.json", NoneVisited())
-        self.assertEqual( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Iron'])['system'])
-        self.assertEqual( '2MASS J10433563-5945136', m.closest([8000, 0, 3000], ['Iron'])['system'])
+        self.assertEqual( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Iron'])[1]['system'])
+        self.assertEqual( '2MASS J10433563-5945136', m.closest([8000, 0, 3000], ['Iron'])[1]['system'])
 
     def test_closest_multiple_mats(self):
         """
@@ -41,8 +41,8 @@ class MaterialsTest(unittest.TestCase):
         chosen
         """
         m = mats.Materials("mats_test.json", NoneVisited())
-        self.assertEqual( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Tungsten', 'Germanium'])['system'])
-        self.assertEqual( '2MASS J10433563-5945136', m.closest([8000, 0, 3000], ['Tungsten', 'Germanium'])['system'])
+        self.assertEqual( '164 G. Canis Majoris', m.closest([0, 0, 0], ['Tungsten', 'Germanium'])[1]['system'])
+        self.assertEqual( '2MASS J10433563-5945136', m.closest([8000, 0, 3000], ['Tungsten', 'Germanium'])[1]['system'])
 
     def test_closest_all_visited(self):
         """

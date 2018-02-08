@@ -151,10 +151,15 @@ def plugin_app(parent):
         nb.Button(this.status_frame, text="SC Exit 5 c a", command=dbgScExit5ca).grid(row=5,column=1,sticky=tk.W)
         nb.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=6,column =0, sticky=tk.W)
         nb.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=6, column =1, sticky=tk.W)
+
+    # TODO : Not the right value for Darwin - right value for testing
+    if os.platform == "darwin":
+        status_loc = local_file("status.json"),
+    else:
+        status_loc = os.path.join( config.default_journal_dir, "status.json"),
       
     this.watcher = watcher.StatusWatcher(
-        os.path.join( config.default_journal_dir, "status.json"),
-        # local_file("status.json"), 
+        status_loc
         this.status_queue)
     this.watcher.daemon = True
     this.watcher.start()

@@ -16,6 +16,7 @@ class Visited():
        """
        self._visited = json.loads(state)
        self._interval_secs = interval_days * 24 * 3600
+       self._is_dirty = False
 
     def expired(self, t, now):
         """
@@ -32,7 +33,10 @@ class Visited():
         can be stored in a string
 
         when allows you to specify the time now - mainly for testing
+
+        assumes that the save is successful, and the store is no longer dirty
         """
+        self._is_dirty = False
         return json.dumps([ x for x in self._visited if not self.expired(x['at'], when)])
 
     def find(self, location):
@@ -54,8 +58,10 @@ class Visited():
         if v:
             v['at'] = when
         else:
+            location = location.copy()
             location['at'] = when
             self._visited.append(location)
+            self._is_dirty = True
 
     def is_visited(self, location, when=time.time()):
         """
@@ -66,12 +72,17 @@ class Visited():
         """
         v = self.find(location)
         if v:
-	    if self.expired(v['at'], when):
+            if self.expired(v['at'], when):
                 return False
             else:
-	        return True
+                return True
         return False
-        
 
-
+    def is_dirty(self):
+        """
+        Returns True if the data should be written to storage. Note that
+        expired entries do not count towards dirty state - they are left xu
+        until a new entry is written, and will be removed then
+        """
+        return self._is_dirty
 
