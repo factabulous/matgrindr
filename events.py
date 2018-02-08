@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import sys
+
 class EventEngine():
     def __init__(self, materials, requirements, visited):
         self._materials = materials
@@ -53,6 +55,7 @@ class EventEngine():
                     return ("Collect",",".join(mats))
                 else:
                     print("Failed to find touchdown target")
+                    sys.stdout.flush()
         if self.event_in(params, ['SupercruiseExit']) and self.keys_in(params, ['StarSystem' , 'Body', 'BodyType']):
             if params['BodyType'] == 'Planet':
                 locs = self._materials.local(params['StarSystem'], params['Body'])

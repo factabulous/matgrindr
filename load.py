@@ -12,12 +12,16 @@ import watcher
 import visited
 import plug
 import heading
+from sys import platform
 
 this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 
 this.debug = 0
+
+window=tk.Tk()
+window.withdraw()
 
 
 def dbgFsdColonia():
@@ -162,10 +166,10 @@ def plugin_app(parent):
         tk.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=6, column =1, sticky=tk.W)
 
     # TODO : Not the right value for Darwin - right value for testing
-    if os.platform == "darwin":
-        status_loc = local_file("status.json"),
+    if platform == "darwin":
+        status_loc = local_file("status.json")
     else:
-        status_loc = os.path.join( config.default_journal_dir, "status.json"),
+        status_loc = os.path.realpath(os.path.join( config.default_journal_dir, "status.json"))
       
     this.watcher = watcher.StatusWatcher(
         status_loc,
