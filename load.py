@@ -49,6 +49,7 @@ def plugin_start():
     this.mats = mats.Materials(local_file("mats.json"), this.visited)
     selected = config.get("matgrindr.selected") or []
     this.events = events.EventEngine(this.mats, selected, this.visited)
+    this._IMG_CLIPBOARD = tk.PhotoImage(file = local_file('clipboard.gif'))
     return "Matgrindr"
 
 def plugin_stop():
@@ -100,6 +101,10 @@ def prefs_changed(cmdr, is_beta):
             res.append(mat)
     config.set("matgrindr.selected", res)
 
+def copy_system_to_clipboard(event):
+   window.clipboard_clear()  # clear clipboard contents
+   window.clipboard_append(this.system_name)
+
 def plugin_app(parent):
     """
     Returns a frame containing the status fields we want to display to the 
@@ -110,6 +115,9 @@ def plugin_app(parent):
     # Current Action being recommended 
     this.action = tk.StringVar() 
     nb.Label(this.status_frame, textvariable=this.action).grid(row=0, column = 0, sticky=tk.W)
+    this.clipboard = tk.Label(this.frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
+    this.clipboard.bind("<Button-1>", copy_system_to_clipboard)
+
 
     # Dynamic Current Location
     nb.Label(this.status_frame, text="Current Lat").grid(row=1, column = 0, sticky=tk.W)
@@ -171,6 +179,7 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
     if res:
         #plug.show_error("Retrieved " + str(len(res)))
         this.action.set(res[0] + ' ' + res[1])
+        this.system_name = res[1]
         if len(res) > 3:
             # We have a lat / lon
             this.target_lat.set( str(res[2]) )
