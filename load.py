@@ -57,6 +57,8 @@ def plugin_start():
     return "Matgrindr"
 
 def plugin_stop():
+    window.destroy()
+
     if this.watcher:
         this.watcher.stop()
         this.watcher.join()
