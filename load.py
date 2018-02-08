@@ -167,7 +167,7 @@ def plugin_app(parent):
         status_loc = os.path.join( config.default_journal_dir, "status.json"),
       
     this.watcher = watcher.StatusWatcher(
-        status_loc
+        status_loc,
         this.status_queue)
     this.watcher.daemon = True
     this.watcher.start()
