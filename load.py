@@ -17,7 +17,7 @@ this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 
-this.debug = 0
+this.debug = 1
 
 
 def dbgFsdColonia():
@@ -115,7 +115,8 @@ def plugin_app(parent):
     # Current Action being recommended 
     this.action = tk.StringVar() 
     nb.Label(this.status_frame, textvariable=this.action).grid(row=0, column = 0, sticky=tk.W)
-    this.clipboard = tk.Label(this.frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
+    this.clipboard = nb.Label(this.status_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
+    this.clipboard.grid(row=0, column=1)
     this.clipboard.bind("<Button-1>", copy_system_to_clipboard)
 
 

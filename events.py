@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from collections import ChainMap
-
 class EventEngine():
     def __init__(self, materials, requirements, visited):
         self._materials = materials
@@ -31,7 +29,8 @@ class EventEngine():
         None or a tuple with (Action, Location)
         """
 
-        params = ChainMap(entry, state)
+        params = state.copy()
+        params.update(entry)
         if self.event_in(params, ['Takeoff', 'FSDJump', 'StartUp', 'Location']) and self.keys_in(params, ['StarPos', 'StarSystem']):
             closest = self._materials.closest(params['StarPos'], self._requirements)
             if closest and closest[1]['system'].upper() == params['StarSystem'].upper():
