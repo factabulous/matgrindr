@@ -17,7 +17,7 @@ this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 
-this.debug = 1
+this.debug = 0
 
 
 def dbgFsdColonia():
@@ -110,56 +110,56 @@ def plugin_app(parent):
     Returns a frame containing the status fields we want to display to the 
     app in the main window
     """
-    this.status_frame = nb.Frame(parent)
+    this.status_frame = tk.Frame(parent)
  
     # Current Action being recommended 
     this.action = tk.StringVar() 
-    nb.Label(this.status_frame, textvariable=this.action).grid(row=0, column = 0, sticky=tk.W)
-    this.clipboard = nb.Label(this.status_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
+    tk.Label(this.status_frame, textvariable=this.action).grid(row=0, column = 0, sticky=tk.W)
+    this.clipboard = tk.Label(this.status_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
     this.clipboard.grid(row=0, column=1)
     this.clipboard.bind("<Button-1>", copy_system_to_clipboard)
 
 
     # Dynamic Current Location
-    nb.Label(this.status_frame, text="Current Lat").grid(row=1, column = 0, sticky=tk.W)
+    tk.Label(this.status_frame, text="Current Lat").grid(row=1, column = 0, sticky=tk.W)
     this.current_lat = tk.DoubleVar()
-    nb.Label(this.status_frame, textvariable=this.current_lat).grid(row=1, column = 1, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.current_lat).grid(row=1, column = 1, sticky=tk.W)
 
-    nb.Label(this.status_frame, text="Current Lon").grid(row=1, column = 2, sticky=tk.W)
+    tk.Label(this.status_frame, text="Current Lon").grid(row=1, column = 2, sticky=tk.W)
     this.current_lon = tk.DoubleVar()
-    nb.Label(this.status_frame, textvariable=this.current_lon).grid(row=1, column = 3)
+    tk.Label(this.status_frame, textvariable=this.current_lon).grid(row=1, column = 3)
 
-    nb.Label(this.status_frame, text="Target Lat").grid(row=2, column = 0, sticky=tk.W)
+    tk.Label(this.status_frame, text="Target Lat").grid(row=2, column = 0, sticky=tk.W)
     this.target_lat = tk.DoubleVar()
-    nb.Label(this.status_frame, textvariable=this.target_lat).grid(row=2, column = 1, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.target_lat).grid(row=2, column = 1, sticky=tk.W)
 
-    nb.Label(this.status_frame, text="Target Lon").grid(row=2, column = 2, sticky=tk.W)
+    tk.Label(this.status_frame, text="Target Lon").grid(row=2, column = 2, sticky=tk.W)
     this.target_lon = tk.DoubleVar()
-    nb.Label(this.status_frame, textvariable=this.target_lon).grid(row=2, column = 3)
+    tk.Label(this.status_frame, textvariable=this.target_lon).grid(row=2, column = 3)
 
     # Heading
-    nb.Label(this.status_frame, text="Current Heading").grid(row=3, column=0, sticky=tk.W)
+    tk.Label(this.status_frame, text="Current Heading").grid(row=3, column=0, sticky=tk.W)
     this.current_heading = tk.DoubleVar()
-    nb.Label(this.status_frame, textvariable=this.current_heading).grid(row=3, column=1)
-    nb.Label(this.status_frame, text="Altitude").grid(row=3, column=2, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.current_heading).grid(row=3, column=1)
+    tk.Label(this.status_frame, text="Altitude").grid(row=3, column=2, sticky=tk.W)
     this.current_altitude = tk.StringVar()
-    nb.Label(this.status_frame, textvariable=this.current_altitude).grid(row=3, column=3)
+    tk.Label(this.status_frame, textvariable=this.current_altitude).grid(row=3, column=3)
 
     # Target Heading
-    nb.Label(this.status_frame, text="Target Heading").grid(row=3, column=0, sticky=tk.W)
+    tk.Label(this.status_frame, text="Target Heading").grid(row=3, column=0, sticky=tk.W)
     this.target_heading = tk.StringVar()
-    nb.Label(this.status_frame, textvariable=this.target_heading).grid(row=3, column=1)
-    nb.Label(this.status_frame, text="Attitude").grid(row=3, column=2, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.target_heading).grid(row=3, column=1)
+    tk.Label(this.status_frame, text="Attitude").grid(row=3, column=2, sticky=tk.W)
     this.target_attitude = tk.StringVar()
-    nb.Label(this.status_frame, textvariable=this.target_attitude).grid(row=3, column=3)
+    tk.Label(this.status_frame, textvariable=this.target_attitude).grid(row=3, column=3)
     if this.debug:
-        nb.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=4, sticky=tk.W)
-        nb.Button(this.status_frame, text="FSDJump Colonia", command=dbgFsdColonia).grid(row=4, column = 1, sticky=tk.W)
-        nb.Button(this.status_frame, text="FSDJump 164 G. Canis Majoris", command=dbgFsdCanis).grid(row=4, column =2, sticky=tk.W)
-        nb.Button(this.status_frame, text="SC Exit 5 c d", command=dbgScExit5cd).grid(row=5,column=0,sticky=tk.W)
-        nb.Button(this.status_frame, text="SC Exit 5 c a", command=dbgScExit5ca).grid(row=5,column=1,sticky=tk.W)
-        nb.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=6,column =0, sticky=tk.W)
-        nb.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=6, column =1, sticky=tk.W)
+        tk.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=4, sticky=tk.W)
+        tk.Button(this.status_frame, text="FSDJump Colonia", command=dbgFsdColonia).grid(row=4, column = 1, sticky=tk.W)
+        tk.Button(this.status_frame, text="FSDJump 164 G. Canis Majoris", command=dbgFsdCanis).grid(row=4, column =2, sticky=tk.W)
+        tk.Button(this.status_frame, text="SC Exit 5 c d", command=dbgScExit5cd).grid(row=5,column=0,sticky=tk.W)
+        tk.Button(this.status_frame, text="SC Exit 5 c a", command=dbgScExit5ca).grid(row=5,column=1,sticky=tk.W)
+        tk.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=6,column =0, sticky=tk.W)
+        tk.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=6, column =1, sticky=tk.W)
 
     # TODO : Not the right value for Darwin - right value for testing
     if os.platform == "darwin":

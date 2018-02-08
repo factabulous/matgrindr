@@ -1,5 +1,5 @@
 * Make controls respect transparency
-* Add Copy 2 Clipboard for system
+* Add Copy 2 Clipboard for system * DONE - TEST
 * Make it display distance to location when zeroing in
 * Blank Target / Current Lat Lon when not on a planet
 * Add tests for case sensitivity
