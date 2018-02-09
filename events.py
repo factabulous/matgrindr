@@ -28,7 +28,9 @@ class EventEngine():
     def process(self, entry, state):
         """
         Decides what we should do given a new journal event. Returns either
-        None or a tuple with (Action, Location)
+        None or a tuple with fields indicating what has updated. Contains
+            action - describes what to do
+            location - one of the mats hashes with system, planet, lat, lon, mats
         """
 
         params = state.copy()
@@ -38,9 +40,9 @@ class EventEngine():
             if closest and closest[1]['system'].upper() == params['StarSystem'].upper():
                 target = self._materials.local(params['StarSystem'], closest[1]['body'])
                 if target:
-                    return ("Supercruise to", closest[1]['body'], target[0]['lat'], target[0]['lon'])
-                return ("Supercruise to", closest[1]['body'])
-            return ("Go to", "{} ({:3.1f} Ly)".format(closest[1]['system'], closest[0]), None, None)
+                    return ("Supercruise to {} {}".format(target[0]['system'], target[0]['body']), target[0])
+                return ("Unexpected supercruise to {} {}".format(closest[1]['system'], closest[1]['body']), closest[1])
+            return ("Go to {} {} ({:1.0f} Ly)".format(closest[1]['system'], closest[1]['body'], closest[0]), closest[1])
 
         if self.event_in(params, ['Touchdown']) and self.keys_in(params, ['Latitude', 'Longitude', 'StarSystem', 'Body']):
                 loc = { 
@@ -52,15 +54,8 @@ class EventEngine():
                 if target:
                     mats = set(target['materials']).intersection(self._requirements)
                     self._visited.set_visited(loc)
-                    return ("Collect",",".join(mats))
+                    return ("Collect "+",".join(mats),)
                 else:
                     print("Failed to find touchdown target")
                     sys.stdout.flush()
-        if self.event_in(params, ['SupercruiseExit']) and self.keys_in(params, ['StarSystem' , 'Body', 'BodyType']):
-            if params['BodyType'] == 'Planet':
-                locs = self._materials.local(params['StarSystem'], params['Body'])
-                if locs:
-                    loc = locs[0]
-                    return ( 'Fly to', "({:4.2f}, {:4.2f})".format(loc['lat'], loc['lon']), loc['lat'], loc['lon'])
-                
         return None
