@@ -49,7 +49,7 @@ def local_file(name):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
 def plugin_start():
-    this.visited = visited.Visited() 
+    this.visited = visited.Visited( config.get("matgrindr.visited")) 
     this.mats = mats.Materials(local_file("mats.json"), this.visited)
     selected = config.get("matgrindr.selected") or []
     this.events = events.EventEngine(this.mats, selected, this.visited)
@@ -72,10 +72,16 @@ def update():
                 this.current_lon.set(status['Longitude'])
                 this.current_heading.set(status['Heading'])
                 this.current_altitude.set(str(status['Altitude']))
-                if this.target_lat.get() and this.current_lat.get():
+                if this.target:
                     this.target_heading.set( heading.heading(
                         ( this.current_lat.get(), this.current_lon.get()), 
-                        ( this.target_lat.get(), this.target_lon.get())))
+                        ( this.target['lat'], this.target['lon'])))
+                    this.target_attitude.set( heading.rate_of_descent(
+                        ( this.current_lat.get(), this.current_lon.get()), 
+                        ( this.target['lat'], this.target['lon']),
+                        height = status['Altitude'], 
+                        radius = this.target['radius']))
+                        
             this.status_frame.update_idletasks()
     except Queue.Empty:
         pass
@@ -108,8 +114,9 @@ def prefs_changed(cmdr, is_beta):
     config.set("matgrindr.selected", res)
 
 def copy_system_to_clipboard(event):
-   window.clipboard_clear()  # clear clipboard contents
-   window.clipboard_append(this.system_name)
+   if this.target:
+       window.clipboard_clear()  # clear clipboard contents
+       window.clipboard_append(this.target['system'])
 
 def plugin_app(parent):
     """
@@ -185,10 +192,11 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
     if res:
         #plug.show_error("Retrieved " + str(len(res)))
-        this.action.set(res[0] + ' ' + res[1])
-        this.system_name = res[1]
-        if len(res) > 3:
-            # We have a lat / lon
-            this.target_lat.set( str(res[2]) )
-            this.target_lon.set( str(res[3]))
+        this.action.set(res[0])
+        if len(res > 1):
+            this.target = res[1]
+            this.target_lat.set( this.target['lat'] )
+            this.target_lon.set( this.target['lon'] )
+        if this.visited.is_dirty():
+            config.set("matgrindr.visited", this.visited.save())s)
 
