@@ -14,6 +14,8 @@ class Visited():
        Visits are dict entries containing:
            system / body / latitude / longitude / visit_time
        """
+       if not state:
+           state = '[]'
        self._visited = json.loads(state)
        self._interval_secs = interval_days * 24 * 3600
        self._is_dirty = False
