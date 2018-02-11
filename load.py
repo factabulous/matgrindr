@@ -19,7 +19,7 @@ this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 
-this.debug = 1
+this.debug = 0
 
 window=tk.Tk()
 window.withdraw()
@@ -72,16 +72,15 @@ def update():
                 this.current_lat.set(status['Latitude'])
                 this.current_lon.set(status['Longitude'])
                 this.current_heading.set(status['Heading'])
-                this.current_altitude.set(str(status['Altitude']))
                 if hasattr(this, 'target'):
-                    this.target_heading.set( heading.heading(
-                        ( this.current_lat.get(), this.current_lon.get()), 
-                        ( this.target['lat'], this.target['lon'])))
-                    this.target_attitude.set( heading.rate_of_descent(
+                    info = heading.target_info( 
                         ( this.current_lat.get(), this.current_lon.get()), 
                         ( this.target['lat'], this.target['lon']),
                         height = status['Altitude'], 
-                        radius = this.target['radius']))
+                        radius = this.target['radius'])
+                    this.current_distance.set(info['distance'])
+                    this.target_heading.set( info['heading'] )
+                    this.target_attitude.set( info['descent_angle'])
                         
             this.status_frame.update_idletasks()
     except Queue.Empty:
@@ -159,9 +158,9 @@ def plugin_app(parent):
     tk.Label(this.status_frame, text="Current Heading").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.current_heading = tk.DoubleVar()
     tk.Label(this.status_frame, textvariable=this.current_heading).grid(row=h.row(), column=h.col(), sticky = tk.W)
-    tk.Label(this.status_frame, text="Altitude").grid(row=h.row(), column=h.col(), sticky=tk.W)
-    this.current_altitude = tk.StringVar()
-    tk.Label(this.status_frame, textvariable=this.current_altitude).grid(row=h.row(), column=h.col(), sticky = tk.W)
+    tk.Label(this.status_frame, text="Distance").grid(row=h.row(), column=h.col(), sticky=tk.W)
+    this.current_distance = tk.DoubleVar()
+    tk.Label(this.status_frame, textvariable=this.current_distance).grid(row=h.row(), column=h.col(), sticky = tk.W)
 
     h.newrow()
     # Target Heading
@@ -199,7 +198,7 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
     if res:
         # The res is a tuple of action + target dict
-        plug.show_error("Retrieved " + str(len(res)))
+        #plug.show_error("Retrieved " + str(len(res)))
         this.action.set(res[0])
         if len(res) > 1:
             this.target = res[1]
