@@ -13,6 +13,7 @@ import visited
 import plug
 import heading
 from sys import platform
+from util import GridHelper
 
 this = sys.modules[__name__]	# For holding module globals
 
@@ -123,56 +124,62 @@ def plugin_app(parent):
     Returns a frame containing the status fields we want to display to the 
     app in the main window
     """
+    h = GridHelper()
     this.status_frame = tk.Frame(parent)
  
     # Current Action being recommended 
     this.action = tk.StringVar() 
-    tk.Label(this.status_frame, textvariable=this.action).grid(row=0, column = 0, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.action).grid(row=h.row(), column = h.col(3), columnspan=3, sticky=tk.W)
     this.clipboard = tk.Label(this.status_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
-    this.clipboard.grid(row=0, column=1)
+    this.clipboard.grid(row=h.row(), column=h.col())
     this.clipboard.bind("<Button-1>", copy_system_to_clipboard)
 
+    h.newrow()
 
     # Dynamic Current Location
-    tk.Label(this.status_frame, text="Current Lat").grid(row=1, column = 0, sticky=tk.W)
+    tk.Label(this.status_frame, text="Current Lat").grid(row=h.row(), column = h.col(), sticky=tk.W)
     this.current_lat = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.current_lat).grid(row=1, column = 1, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.current_lat).grid(row=h.row(), column = h.col(), sticky=tk.W)
 
-    tk.Label(this.status_frame, text="Current Lon").grid(row=1, column = 2, sticky=tk.W)
+    tk.Label(this.status_frame, text="Current Lon").grid(row=h.row(), column = h.col(), sticky=tk.W)
     this.current_lon = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.current_lon).grid(row=1, column = 3)
+    tk.Label(this.status_frame, textvariable=this.current_lon).grid(row=h.row(), column = h.col())
 
-    tk.Label(this.status_frame, text="Target Lat").grid(row=2, column = 0, sticky=tk.W)
+    h.newrow()
+    tk.Label(this.status_frame, text="Target Lat").grid(row=h.row(), column = h.col(), sticky=tk.W)
     this.target_lat = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.target_lat).grid(row=2, column = 1, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.target_lat).grid(row=h.row(), column = h.col(), sticky=tk.W)
 
-    tk.Label(this.status_frame, text="Target Lon").grid(row=2, column = 2, sticky=tk.W)
+    tk.Label(this.status_frame, text="Target Lon").grid(row=h.row(), column = h.col(), sticky=tk.W)
     this.target_lon = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.target_lon).grid(row=2, column = 3)
+    tk.Label(this.status_frame, textvariable=this.target_lon).grid(row=h.row(), column = h.col())
 
+    h.newrow()
     # Heading
-    tk.Label(this.status_frame, text="Current Heading").grid(row=3, column=0, sticky=tk.W)
+    tk.Label(this.status_frame, text="Current Heading").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.current_heading = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.current_heading).grid(row=3, column=1)
-    tk.Label(this.status_frame, text="Altitude").grid(row=3, column=2, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.current_heading).grid(row=h.row(), column=h.col(), sticky = tk.W)
+    tk.Label(this.status_frame, text="Altitude").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.current_altitude = tk.StringVar()
-    tk.Label(this.status_frame, textvariable=this.current_altitude).grid(row=3, column=3)
+    tk.Label(this.status_frame, textvariable=this.current_altitude).grid(row=h.row(), column=h.col(), sticky = tk.W)
 
+    h.newrow()
     # Target Heading
-    tk.Label(this.status_frame, text="Target Heading").grid(row=3, column=0, sticky=tk.W)
+    tk.Label(this.status_frame, text="Target Heading").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.target_heading = tk.StringVar()
-    tk.Label(this.status_frame, textvariable=this.target_heading).grid(row=3, column=1)
-    tk.Label(this.status_frame, text="Attitude").grid(row=3, column=2, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.target_heading).grid(row=h.row(), column=h.col(), sticky=tk.W)
+    tk.Label(this.status_frame, text="Attitude").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.target_attitude = tk.StringVar()
-    tk.Label(this.status_frame, textvariable=this.target_attitude).grid(row=3, column=3)
+    tk.Label(this.status_frame, textvariable=this.target_attitude).grid(row=h.row(), column=h.col(), sticky=tk.W)
     if this.debug:
-        tk.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=4, sticky=tk.W)
-        tk.Button(this.status_frame, text="FSDJump Colonia", command=dbgFsdColonia).grid(row=4, column = 1, sticky=tk.W)
-        tk.Button(this.status_frame, text="FSDJump 164 G. Canis Majoris", command=dbgFsdCanis).grid(row=4, column =2, sticky=tk.W)
-        tk.Button(this.status_frame, text="SC Exit 5 c d", command=dbgScExit5cd).grid(row=5,column=0,sticky=tk.W)
-        tk.Button(this.status_frame, text="SC Exit 5 c a", command=dbgScExit5ca).grid(row=5,column=1,sticky=tk.W)
-        tk.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=6,column =0, sticky=tk.W)
-        tk.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=6, column =1, sticky=tk.W)
+        h.newrow()
+        tk.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=h.row(), column = h.col(), sticky=tk.W)
+        tk.Button(this.status_frame, text="FSDJump Colonia", command=dbgFsdColonia).grid(row=h.row(), column = h.col(), sticky=tk.W)
+        h.newrow()
+        tk.Button(this.status_frame, text="FSDJump 164 G. Canis Majoris", command=dbgFsdCanis).grid(row=h.row(), column =h.col(), sticky=tk.W)
+        tk.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=h.row(),column =h.col(), sticky=tk.W)
+        h.newrow()
+        tk.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=h.row(), column =h.col(), sticky=tk.W)
 
     # TODO : Not the right value for Darwin - right value for testing
     if platform == "darwin":
@@ -192,9 +199,9 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
     if res:
         # The res is a tuple of action + target dict
-        #plug.show_error("Retrieved " + str(len(res)))
+        plug.show_error("Retrieved " + str(len(res)))
         this.action.set(res[0])
-        if len(res > 1):
+        if len(res) > 1:
             this.target = res[1]
             this.target_lat.set( this.target['lat'] )
             this.target_lon.set( this.target['lon'] )
