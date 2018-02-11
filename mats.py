@@ -39,16 +39,25 @@ class Materials():
         res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not self._visited or not self._visited.is_visited(mat)))
         return res[0] if res else None
 
+    def same_body(self, mat, loc):
+        """
+        Bodies are weird - some datasets give their full name, others
+        just a namw relative to system - we accept either
+        """
+        return same(mat['body'], loc['body']) or same(mat['system'] + ' ' + mat['body'], loc['body'])
+
     def matches(self, loc):
         """
         Returns the material location for this location, or None if this is 
         not a known location. lat and lon are allowed to differ slightly
+        We also allow for body names to be 'within' the system or for them
+        to include the system name
         """
         if self._visited.is_visited(loc):
             return None
 
         for m in self._materials:
-            if same(m['system'], loc['system']) and same(m['body'], loc['body']) and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
+            if same(m['system'], loc['system']) and self.same_body(m, loc) and math.fabs(m['lat'] - loc['lat']) < 3 and math.fabs(m['lon'] - loc['lon']) < 3:
                 return m
         return None
 
@@ -63,7 +72,7 @@ class Materials():
         locs = []
         
         for m in self._materials:
-            if same(m['system'], system) and same(m['body'], body) and not self._visited.is_visited(m):
+            if same(m['system'], system) and self.same_body(m, { 'system': system, 'body': body }) and not self._visited.is_visited(m):
                 locs.append(m)
         return locs
 
