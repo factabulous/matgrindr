@@ -27,6 +27,29 @@ class EventEngine():
             return d['event'] in keys
         return False
 
+    def update_location(self, params = {}): 
+        """
+        Extracts as much location information as possible from data
+        in the format of the journal messages
+        """
+        if 'StarSystem' in params:
+            self._location = { 'system': params['StarSystem'] }
+
+            if 'Body' in params:
+                self._location['body'] = params['Body']
+
+                if self.keys_in( params, ['Latitude', 'Longitude' ]):
+                    self._location['lat'] = params['Latitude']
+                    self._location['lon'] = params['Longitude']
+
+        return self._location
+
+    def location(self): 
+        """
+        Returns the current location we have built up from messages
+        """
+        return self._location
+
     def process(self, entry, state):
         """
         Decides what we should do given a new journal event. Returns either
@@ -37,8 +60,8 @@ class EventEngine():
 
         params = state.copy()
         params.update(entry)
-        if self.event_in(params, ['Takeoff', 'FSDJump', 'StartUp', 'Location']) and self.keys_in(params, ['StarPos', 'StarSystem']):
-            self._location = { 'system': params['StarSystem'] }
+        if self.event_in(params, ['Takeoff', 'FSDJump', 'StartUp']) and self.keys_in(params, ['StarPos', 'StarSystem']):
+            self.update_location( params )
             closest = self._materials.closest(params['StarPos'], self._requirements)
             if closest and same(closest[1]['system'], params['StarSystem']):
                 target = self._materials.local(params['StarSystem'], closest[1]['body'])
@@ -47,9 +70,9 @@ class EventEngine():
                 return ("Unexpected supercruise to {} {}".format(closest[1]['system'], closest[1]['body']), closest[1])
             return ("Go to {} {} ({:1.0f} Ly)".format(closest[1]['system'], closest[1]['body'], closest[0]), closest[1])
 
-        if self.event_in(params, ['SupercruiseExit', 'Location']) and self.keys_in(params, ['Body', 'StarSystem']):
+        if self.event_in(params, ['SupercruiseExit', 'Location']):
             # Useful for finding the body we are at
-            self._location = { 'system': params['StarSystem'], 'body': params['Body'] }
+            self.update_location( params )
             
         if self.event_in(params, ['Touchdown']) and self.keys_in(params, ['Latitude', 'Longitude' ]):
                 loc = { 

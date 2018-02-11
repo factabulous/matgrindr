@@ -68,9 +68,10 @@ class EventsTest(unittest.TestCase):
         ev = events.EventEngine(mats, None, NoneVisited())
         self.assertEqual(("Supercruise to SOL MERCURY", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
-    def test_location_event_correct_system(self):
+    def _test_location_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
+        (Location even no longer causes nav events)
         """
         mats = FakeMaterials('Sol', 'Venus')
         ev = events.EventEngine(mats, None, NoneVisited())
