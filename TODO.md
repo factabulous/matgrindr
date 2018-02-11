@@ -9,3 +9,6 @@
 * Descent speed suggestion would be good.
 * Async loading of mats.json
 * Display distance to a system when not in it DONE - TEST
+* Add a 'skip' button to skip the current suggestion
+* Add display of what is present at current target
+* Add display of current mat counts somewhere
