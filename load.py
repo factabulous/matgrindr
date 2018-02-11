@@ -73,7 +73,7 @@ def update():
                 this.current_lon.set(status['Longitude'])
                 this.current_heading.set(status['Heading'])
                 this.current_altitude.set(str(status['Altitude']))
-                if this.target:
+                if hasattr(this, 'target'):
                     this.target_heading.set( heading.heading(
                         ( this.current_lat.get(), this.current_lon.get()), 
                         ( this.target['lat'], this.target['lon'])))
