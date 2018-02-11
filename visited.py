@@ -75,10 +75,7 @@ class Visited():
         """
         v = self.find(location)
         if v:
-            if self.expired(v['at'], when):
-                return False
-            else:
-                return True
+            return False if self.expired(v['at'], when) else True
         return False
 
     def is_dirty(self):

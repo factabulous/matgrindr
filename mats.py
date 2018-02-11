@@ -37,9 +37,7 @@ class Materials():
         """
         mats = set(mats)
         res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not self._visited or not self._visited.is_visited(mat)))
-        if res:
-            return res[0]
-        return None
+        return res[0] if res else None
 
     def matches(self, loc):
         """

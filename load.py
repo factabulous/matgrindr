@@ -93,11 +93,8 @@ def plugin_prefs(parent, cmdr, is_beta):
     this.settings = {}
     selected = config.get("matgrindr.selected") or []
     for mat in this.mats.names():
-        v = 0
-        if mat in selected:
-            v = 1
         this.settings[mat] = tk.IntVar()
-        this.settings[mat].set(v)
+        this.settings[mat].set(1 if mat in selected else 0)
         chk = nb.Checkbutton(frame, text=mat, variable=this.settings[mat]).grid(sticky=tk.W)
 
     return frame
