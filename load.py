@@ -18,7 +18,7 @@ this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 
-this.debug = 0
+this.debug = 1
 
 window=tk.Tk()
 window.withdraw()
@@ -191,6 +191,7 @@ def plugin_app(parent):
 def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
     if res:
+        # The res is a tuple of action + target dict
         #plug.show_error("Retrieved " + str(len(res)))
         this.action.set(res[0])
         if len(res > 1):
