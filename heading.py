@@ -24,11 +24,22 @@ def great_circle(start, end, radius):
         pow(sin(delta_lat / 2), 2) + cos(start[0]) * cos(end[0]) * pow(sin(delta_lon/2), 2)))
     return radius * delta
 
-def rate_of_descent(start, end, height, radius):
+def angle_of_descent(start, end, height, radius):
     """
-    Works out the rate of descent needed to hit zero height at the 
+    Works out the angle of descent needed to hit zero height at the 
     given end point
     """
     horz_distance = great_circle(start, end, radius)
     angle = atan2(-height, horz_distance)
     return int(round(degrees(angle)))
+
+def target_info(now, goal, height, radius):
+    """
+    Returns a dict with (heading, distance, descent_angle) to make
+    it easier to gather this information
+    """
+    return { 
+        "heading": heading(now, goal),
+        "distance": great_circle(now, goal, radius),
+        "descent_angle": angle_of_descent(now, goal, height, radius)
+    }

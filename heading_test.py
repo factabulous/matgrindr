@@ -17,13 +17,13 @@ class HeadingTest(unittest.TestCase):
         self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (10, 0), 500), places=3)
         self.assertAlmostEqual(174.5329, heading.great_circle((0, 0), (0, 20), 500), places=3)
 
-    def test_rate_of_descent(self):
+    def test_angle_of_descent(self):
         """
         Works out the rate of descent needed to hit zero height at the 
         given end point
         """
-        self.assertEqual(-45, heading.rate_of_descent((0,0), (0,10), radius=500, height=87))
-        self.assertEqual(-63, heading.rate_of_descent((0,0), (0,10), radius=500, height=174))
+        self.assertEqual(-45, heading.angle_of_descent((0,0), (0,10), radius=500, height=87))
+        self.assertEqual(-63, heading.angle_of_descent((0,0), (0,10), radius=500, height=174))
         
 
 

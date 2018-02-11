@@ -5,10 +5,14 @@ import unittest
 
 class NoneVisited():
     def is_visited(self, loc):
+        if 'system' not in loc: 
+            raise ValueError("Should be passed a location with a system")
         return False
 
 class AllVisited():
     def is_visited(self, loc):
+        if 'system' not in loc: 
+            raise ValueError("Should be passed a location with a system")
         return True
 
 class MaterialsTest(unittest.TestCase):

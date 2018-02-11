@@ -36,10 +36,8 @@ class Materials():
         Returns a tuple with (distance, loc)
         """
         mats = set(mats)
-        res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not self._visited or not self._visited.is_visited(loc)))
-        if res:
-            return res[0]
-        return None
+        res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not self._visited or not self._visited.is_visited(mat)))
+        return res[0] if res else None
 
     def matches(self, loc):
         """
