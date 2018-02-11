@@ -6,11 +6,24 @@ import visited
 class VisitedTest(unittest.TestCase):
 
     def test_visited_recently(self):
+        """
+        Checks that the visited state is remembered and expires after time
+        """
         v = visited.Visited()
         v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, 
                  when = 1000 )
         self.assertTrue(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000))
         self.assertFalse(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000 + 7 * 24 * 3600))
+
+    def test_visited_case_sensitivity(self):
+        """
+        Checks that the store in not case sensitve
+        """
+        v = visited.Visited()
+        v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, 
+                 when = 1000 )
+        self.assertTrue(v.is_visited({ 'system': 'SOL', 'body': 'EARTH', 'lat': 0, 'lon': 0 }, when=1000))
+        self.assertFalse(v.is_visited({ 'system': 'SOL', 'body': 'EARTH', 'lat': 0, 'lon': 0 }, when=1000 + 7 * 24 * 3600))
 
     def test_visited_multiple_times(self):
         v = visited.Visited()
@@ -46,6 +59,9 @@ class VisitedTest(unittest.TestCase):
         v.save()
 
         self.assertFalse(v.is_dirty())
+        v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, 
+                 when = 1001 )
+        self.assertTrue(v.is_dirty())
 
 if __name__ == '__main__':
     unittest.main()

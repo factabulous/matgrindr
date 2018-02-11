@@ -3,6 +3,7 @@
 import json
 import math
 import time
+from util import same
 
 class Visited():
     def __init__(self, state = '[]', interval_days = 7):
@@ -46,7 +47,7 @@ class Visited():
         Finds a location in the store, or return None if not present
         """
         for v in self._visited:
-            if v['system'] == location['system'] and v['body'] == location['body'] and v['lat'] == location['lat'] and v['lon'] == location['lon']:
+            if same(v['system'], location['system']) and same(v['body'], location['body']) and v['lat'] == location['lat'] and v['lon'] == location['lon']:
                 return v
         return None
 
@@ -63,7 +64,7 @@ class Visited():
             location = location.copy()
             location['at'] = when
             self._visited.append(location)
-            self._is_dirty = True
+        self._is_dirty = True
 
     def is_visited(self, location, when=time.time()):
         """
