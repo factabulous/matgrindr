@@ -47,7 +47,8 @@ class Visited():
         Finds a location in the store, or return None if not present
         """
         for v in self._visited:
-            if same(v['system'], location['system']) and same(v['body'], location['body']) and v['lat'] == location['lat'] and v['lon'] == location['lon']:
+            print("v {} location {}".format(v, location))
+            if same(v['system'], location['system']) and (same(v['body'], location['body']) or same(v['system'] + ' ' + v['body'], location['body'])) and v['lat'] == location['lat'] and v['lon'] == location['lon']:
                 return v
         return None
 

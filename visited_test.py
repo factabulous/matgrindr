@@ -17,13 +17,31 @@ class VisitedTest(unittest.TestCase):
 
     def test_visited_case_sensitivity(self):
         """
-        Checks that the store in not case sensitve
+        Checks that the store is not case sensitve
         """
         v = visited.Visited()
         v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, 
                  when = 1000 )
         self.assertTrue(v.is_visited({ 'system': 'SOL', 'body': 'EARTH', 'lat': 0, 'lon': 0 }, when=1000))
         self.assertFalse(v.is_visited({ 'system': 'SOL', 'body': 'EARTH', 'lat': 0, 'lon': 0 }, when=1000 + 7 * 24 * 3600))
+
+    def test_visited_planet_body_name_long(self):
+        """
+        Checks that the store handles bodies that are prefixed by their
+        system name
+        """
+        v = visited.Visited()
+        v.set_visited( { 'system': 'Synuefe Sector AA-A c2-12', 'body': '5', 'lat': 0, 'lon': 0 }, 
+                 when = 1000 )
+        self.assertTrue(v.is_visited({ 'system': 'Synuefe Sector AA-A c2-12', 'body': '5', 'lat': 0, 'lon': 0 }, when=1000))
+        self.assertTrue(v.is_visited({ 'system': 'Synuefe Sector AA-A c2-12', 'body': 'Synuefe Sector AA-A c2-12 5', 'lat': 0, 'lon': 0 }, when=1000))
+
+        # In these cases we stored the longform so we can't test the shortform
+        # I think that is ok for now
+        v.set_visited( { 'system': 'Synuefe Sector BB-B c2-12', 'body': 'Synuefe Sector BB-B c2-12 5', 'lat': 0, 'lon': 0 }, 
+                 when = 1000 )
+        self.assertFalse(v.is_visited({ 'system': 'Synuefe Sector BB-B c2-12', 'body': '5', 'lat': 0, 'lon': 0 }, when=1000))
+        self.assertTrue(v.is_visited({ 'system': 'Synuefe Sector BB-B c2-12', 'body': 'Synuefe Sector BB-B c2-12 5', 'lat': 0, 'lon': 0 }, when=1000))
 
     def test_visited_multiple_times(self):
         v = visited.Visited()
