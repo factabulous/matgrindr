@@ -8,6 +8,7 @@ class EventEngine():
         self._materials = materials
         self._requirements = requirements
         self._visited = visited
+        self._location = {}
 
     def keys_in(self, d, keys):
         """
@@ -37,6 +38,7 @@ class EventEngine():
         params = state.copy()
         params.update(entry)
         if self.event_in(params, ['Takeoff', 'FSDJump', 'StartUp', 'Location']) and self.keys_in(params, ['StarPos', 'StarSystem']):
+            self._location = { 'system': params['StarSystem'] }
             closest = self._materials.closest(params['StarPos'], self._requirements)
             if closest and same(closest[1]['system'], params['StarSystem']):
                 target = self._materials.local(params['StarSystem'], closest[1]['body'])
@@ -45,10 +47,14 @@ class EventEngine():
                 return ("Unexpected supercruise to {} {}".format(closest[1]['system'], closest[1]['body']), closest[1])
             return ("Go to {} {} ({:1.0f} Ly)".format(closest[1]['system'], closest[1]['body'], closest[0]), closest[1])
 
-        if self.event_in(params, ['Touchdown']) and self.keys_in(params, ['Latitude', 'Longitude', 'StarSystem', 'Body']):
+        if self.event_in(params, ['SupercruiseExit', 'Location']) and self.keys_in(params, ['Body', 'StarSystem']):
+            # Useful for finding the body we are at
+            self._location = { 'system': params['StarSystem'], 'body': params['Body'] }
+            
+        if self.event_in(params, ['Touchdown']) and self.keys_in(params, ['Latitude', 'Longitude' ]):
                 loc = { 
-                    'system': params['StarSystem'],
-                    'body': params['Body'],
+                    'system': self._location['system'], 
+                    'body': self._location['body'],
                     'lat': params['Latitude'],
                     'lon': params['Longitude'] }
                 target = self._materials.matches(loc)
@@ -58,5 +64,4 @@ class EventEngine():
                     return ("Collect "+",".join(mats),)
                 else:
                     print("Failed to find touchdown target")
-                    sys.stdout.flush()
         return None

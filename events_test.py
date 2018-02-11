@@ -91,6 +91,7 @@ class EventsTest(unittest.TestCase):
         visited = NoneVisited()
         mats = FakeMaterials('Sol', 'Earth', 13, 67, ['Iron', 'Gold'])
         ev = events.EventEngine(mats, ['Gold'], visited)
+        ev.process( {'event': 'Location', 'StarSystem': 'Sol', "Body": 'Earth'}, {} )
         self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth'} ))
         self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
 
@@ -102,7 +103,8 @@ class EventsTest(unittest.TestCase):
         visited = NoneVisited()
         mats = FakeMaterials('SOL', 'EARTH', 13, 67, ['Iron', 'Gold'])
         ev = events.EventEngine(mats, ['Gold'], visited)
-        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth'} ))
+        ev.process( { 'event': 'SupercruiseExit', 'StarSystem': 'Sol', 'Body': 'Earth' }, {} )
+        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {} ))
         self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
         
     def test_takeoff_event_wrong_system(self):
