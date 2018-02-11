@@ -38,9 +38,9 @@ class EventEngine():
             if 'Body' in params:
                 self._location['body'] = params['Body']
 
-                if self.keys_in( params, ['Latitude', 'Longitude' ]):
-                    self._location['lat'] = params['Latitude']
-                    self._location['lon'] = params['Longitude']
+        if self.keys_in( params, ['Latitude', 'Longitude' ]):
+            self._location['lat'] = params['Latitude']
+            self._location['lon'] = params['Longitude']
 
         return self._location
 
@@ -57,6 +57,8 @@ class EventEngine():
             action - describes what to do
             location - one of the mats hashes with system, planet, lat, lon, mats
         """
+
+        print("[matgrindr] Event {}".format(entry['event']))
 
         params = state.copy()
         params.update(entry)
@@ -75,16 +77,12 @@ class EventEngine():
             self.update_location( params )
             
         if self.event_in(params, ['Touchdown']) and self.keys_in(params, ['Latitude', 'Longitude' ]):
-                loc = { 
-                    'system': self._location['system'], 
-                    'body': self._location['body'],
-                    'lat': params['Latitude'],
-                    'lon': params['Longitude'] }
-                target = self._materials.matches(loc)
-                if target:
-                    mats = set(target['materials']).intersection(self._requirements)
-                    self._visited.set_visited(loc)
-                    return ("Collect "+",".join(mats),)
-                else:
-                    print("Failed to find touchdown target")
+            self.update_location( params )
+            target = self._materials.matches(self.location())
+            if target:
+                mats = set(target['materials']).intersection(self._requirements)
+                self._visited.set_visited(self.location())
+                return ("Collect "+",".join(mats),)
+            else:
+                print("Failed to find touchdown target")
         return None
