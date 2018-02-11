@@ -59,6 +59,15 @@ class EventsTest(unittest.TestCase):
         ev = events.EventEngine(mats, None, NoneVisited())
         self.assertEqual(("Supercruise to Sol Mercury", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
+    def test_fsd_event_correct_system_case_wrong(self):
+        """
+        test when systems do match we ask for the planet(s) to show and
+        the data has case differences from the events
+        """
+        mats = FakeMaterials('SOL', 'MERCURY')
+        ev = events.EventEngine(mats, None, NoneVisited())
+        self.assertEqual(("Supercruise to SOL MERCURY", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+
     def test_location_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
@@ -81,6 +90,17 @@ class EventsTest(unittest.TestCase):
         """
         visited = NoneVisited()
         mats = FakeMaterials('Sol', 'Earth', 13, 67, ['Iron', 'Gold'])
+        ev = events.EventEngine(mats, ['Gold'], visited)
+        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth'} ))
+        self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
+
+    def test_touchdown_at_target_wrong_case(self):
+        """
+        test that we note success when we hit a target but the dataset
+        case doesn't match the ones from the events
+        """
+        visited = NoneVisited()
+        mats = FakeMaterials('SOL', 'EARTH', 13, 67, ['Iron', 'Gold'])
         ev = events.EventEngine(mats, ['Gold'], visited)
         self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth'} ))
         self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())

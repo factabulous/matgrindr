@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from util import same
 
 class EventEngine():
     def __init__(self, materials, requirements, visited):
@@ -37,7 +38,7 @@ class EventEngine():
         params.update(entry)
         if self.event_in(params, ['Takeoff', 'FSDJump', 'StartUp', 'Location']) and self.keys_in(params, ['StarPos', 'StarSystem']):
             closest = self._materials.closest(params['StarPos'], self._requirements)
-            if closest and closest[1]['system'].upper() == params['StarSystem'].upper():
+            if closest and same(closest[1]['system'], params['StarSystem']):
                 target = self._materials.local(params['StarSystem'], closest[1]['body'])
                 if target:
                     return ("Supercruise to {} {}".format(target[0]['system'], target[0]['body']), target[0])
