@@ -87,6 +87,9 @@ class EventEngine():
             p['ShortBody'] = self.short_body(p['StarSystem'], p['Body'])
         return p
 
+    def on_correct_body(self, params, closest):
+        return 'ShortBody' in params and same(closest['body'], params['ShortBody'])
+
     def process(self, entry, state):
         """
         Decides what we should do given a new journal event. Returns either
@@ -112,7 +115,7 @@ class EventEngine():
         if location_changed and self.keys_in(params, ['StarPos']):
             distance, closest = self._materials.closest(params['StarPos'], self._requirements)
             if closest and same(closest['system'], self._location['system']):
-                if not 'ShortBody' in params or not same(closest['body'], params['ShortBody']):
+                if not self.on_correct_body(params, closest):
                     return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
                 else:
                     target = self._materials.matches(self.location())
