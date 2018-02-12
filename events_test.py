@@ -130,7 +130,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Mercury')
         ev = events.EventEngine(mats, None, NoneVisited())
-        ev.update_location( { 'StarSystem': 'Sol', 'Body': 'Mars' } )
+        ev.update_location( { 'StarSystem': 'Sol', 'ShortBody': 'Mars' } )
         self.assertEqual( 'Sol', ev.location()['system'])
         self.assertEqual( 'Mars', ev.location()['body'])
 
@@ -143,6 +143,20 @@ class EventsTest(unittest.TestCase):
         ev.update_location( { 'Latitude': 9.1827, 'Longitude': 19.1863 } )
         self.assertEqual( 9.1827, ev.location()['lat'])
         self.assertEqual( 19.1863, ev.location()['lon'])
+
+    def test_short_body(self):
+        mats = FakeMaterials('Sol', 'Mercury')
+        ev = events.EventEngine(mats, None, NoneVisited())
+        self.assertEqual("Earth", ev.short_body("Sol", "Earth"))
+        self.assertEqual("1 a", ev.short_body("Achenar", "Achenar 1 a"))
+
+    def test_make_params(self):
+        mats = FakeMaterials('Sol', 'Mercury')
+        ev = events.EventEngine(mats, None, NoneVisited())
+        self.assertEqual( { 'a': 1} , ev.make_params({ 'a': 1 }, { 'a': 2 }))
+        self.assertEqual( { 'a': 2, 'b': 2} , ev.make_params({ 'b': 2 }, { 'a': 2 }))
+        self.assertEqual( { 'ShortBody': 'Mars', 'Body': 'Mars', 'StarSystem': 'Sol'} , ev.make_params({ 'StarSystem': 'Sol' }, { 'Body': 'Mars' }))
+        self.assertEqual( { 'ShortBody': '1', 'Body': 'Achenar 1', 'StarSystem': 'Achenar'} , ev.make_params({ 'StarSystem': 'Achenar' }, { 'Body': 'Achenar 1' }))
         
 
 if __name__ == '__main__':

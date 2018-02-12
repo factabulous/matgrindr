@@ -4,6 +4,16 @@ import sys
 from util import same
 
 class EventEngine():
+    """
+    This class takes in the events from the journal and uses them
+    to maintain internal state and decide what should be displayed. 
+    Note that it (and related classes) expect body names to be the 
+    'short' form - so Achenar 1 would just have a body name '1'. 
+
+    This is enforced by adding a field 'ShortBody' into events as the
+    journals use longform body names.
+    """
+
     def __init__(self, materials, requirements, visited):
         self._materials = materials
         self._requirements = requirements
@@ -35,8 +45,8 @@ class EventEngine():
         if 'StarSystem' in params:
             self._location = { 'system': params['StarSystem'] }
 
-            if 'Body' in params:
-                self._location['body'] = params['Body']
+            if 'ShortBody' in params:
+                self._location['body'] = params['ShortBody']
 
         if self.keys_in( params, ['Latitude', 'Longitude' ]):
             self._location['lat'] = params['Latitude']
@@ -50,6 +60,30 @@ class EventEngine():
         """
         return self._location
 
+    def short_body(self, system, body):
+        """
+        Returns a field that contains
+        the normalised body name
+        """
+        if body.startswith(system + ' '):
+            return body[len(system)+1:]
+        else:
+            return body
+
+    def make_params(self, entry, state):
+        """
+        Returns a combined set of parameters made from the 
+        entry and state parameters, plus any internal state we 
+        already have. Also adds a 'ShortBody' field that contains
+        the normalised body name
+        """
+        p = {}
+        p.update(state)
+        p.update(entry)
+        if self.keys_in(p, ['StarSystem', 'Body']):
+            p['ShortBody'] = self.short_body(p['StarSystem'], p['Body'])
+        return p
+
     def process(self, entry, state):
         """
         Decides what we should do given a new journal event. Returns either
@@ -60,17 +94,16 @@ class EventEngine():
 
         print("[matgrindr] Event {}".format(entry['event']))
 
-        params = state.copy()
-        params.update(entry)
+        params = self.make_params(entry, state)
         if self.event_in(params, ['Takeoff', 'FSDJump', 'StartUp']) and self.keys_in(params, ['StarPos', 'StarSystem']):
             self.update_location( params )
-            closest = self._materials.closest(params['StarPos'], self._requirements)
-            if closest and same(closest[1]['system'], params['StarSystem']):
-                target = self._materials.local(params['StarSystem'], closest[1]['body'])
+            distance, closest = self._materials.closest(params['StarPos'], self._requirements)
+            if closest and same(closest['system'], params['StarSystem']):
+                target = self._materials.local(params['StarSystem'], closest['body'])
                 if target:
                     return ("Supercruise to {} {}".format(target[0]['system'], target[0]['body']), target[0])
-                return ("Unexpected supercruise to {} {}".format(closest[1]['system'], closest[1]['body']), closest[1])
-            return ("Go to {} {} ({:1.0f} Ly)".format(closest[1]['system'], closest[1]['body'], closest[0]), closest[1])
+                return ("Unexpected supercruise to {} {}".format(closest['system'], closest['body']), closest)
+            return ("Go to {} {} ({:1.0f} Ly)".format(closest['system'], closest['body'], distance), closest)
 
         if self.event_in(params, ['SupercruiseExit', 'Location']):
             # Useful for finding the body we are at

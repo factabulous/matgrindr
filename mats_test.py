@@ -54,8 +54,8 @@ class MaterialsTest(unittest.TestCase):
         return any
         """
         m = mats.Materials("mats_test.json", AllVisited())
-        self.assertIsNone( m.closest([0, 0, 0], ['Tungsten', 'Germanium']))
-        self.assertIsNone( m.closest([8000, 0, 3000], ['Tungsten', 'Germanium']))
+        self.assertEqual( (None, None), m.closest([0, 0, 0], ['Tungsten', 'Germanium']))
+        self.assertEqual( (None, None), m.closest([8000, 0, 3000], ['Tungsten', 'Germanium']))
 
     def test_matches(self):
         m = mats.Materials("mats_test.json", NoneVisited())
@@ -65,19 +65,6 @@ class MaterialsTest(unittest.TestCase):
         self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": 4.8631, "lon": 3.0394 }))
         self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '5 c a', "lat": -4.8631, "lon": 7.0394 }))
         
-    def test_matches_full_body_name(self):
-        """
-        Some data sets give only the body within the system (so, say '5'), and
-        others prepend the system name (so, say, Synuefe Sector AA-A c12-1 5)
-        This test is for the second case ;)
-        """
-        m = mats.Materials("mats_test.json", NoneVisited())
-        self.assertTrue( m.matches( { 'system': '164 G. Canis Majoris', 'body': '164 G. Canis Majoris 5 c a', "lat": -4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '165 G. Canis Majoris', 'body': '164 G. Canis Majoris 5 c a', "lat": -4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '164 G. Canis Majoris 5 c b', "lat": -4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '164 G. Canis Majoris 5 c a', "lat": 4.8631, "lon": 3.0394 }))
-        self.assertFalse( m.matches( { 'system': '164 G. Canis Majoris', 'body': '164 G. Canis Majoris 5 c a', "lat": -4.8631, "lon": 7.0394 }))
-
     def test_matches_case_insensitive(self):
         m = mats.Materials("mats_test.json", NoneVisited())
         self.assertTrue( m.matches( { 'system': '164 G. canis majoris', 'body': '5 C A', "lat": -4.8631, "lon": 3.0394 }))
@@ -93,14 +80,6 @@ class MaterialsTest(unittest.TestCase):
         m = mats.Materials("mats_test.json", NoneVisited())
         self.assertTrue( m.local( '164 G. Canis Majoris', '5 c a'))
         self.assertFalse( m.local( '164 G. Canis Majoris', '5 c b'))
-
-    def test_local_full_body_name(self):
-        """
-        Check we can get all the local sites (on the same body) 
-        """
-        m = mats.Materials("mats_test.json", NoneVisited())
-        self.assertTrue( m.local( '164 G. Canis Majoris', '164 G. Canis Majoris 5 c a'))
-        self.assertFalse( m.local( '164 G. Canis Majoris', '164 G. Canis Majoris 5 c b'))
 
     def test_local_visited(self):
         """
