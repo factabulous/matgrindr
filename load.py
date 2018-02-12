@@ -34,17 +34,11 @@ def dbgFsdCanis():
 def dbgFsdSol():
     journal_entry("Cmdr", True, "Sol", None, {'event': 'FSDJump', 'StarSystem': 'Sol', 'StarPos': [ 0, 0, 0]}, {})
 
-def dbgScExit5ca():
-    journal_entry("Cmdr", True, "164 G. Canis Majoris", "5 c a", {'event': 'SupercruiseExit', 'StarSystem': '164 G. Canis Majoris', 'Body': '5 c a', 'BodyType': 'Planet'}, {'StarPos': [ 484.125 , -31 , -311.03125]})
-    
-def dbgScExit5cd():
-    journal_entry("Cmdr", True, "164 G. Canis Majoris", "5 c d", {'event': 'SupercruiseExit', 'StarSystem': '164 G. Canis Majoris', 'Body': '5 c d', 'BodyType': 'Planet'}, {'StarPos': [ 484.125 , -31 , -311.03125]})
-
 def dbgTouchdownIn():
-    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': -5, 'Longitude': 3}, {'StarSystem': '164 G. Canis Majoris', 'Body': '5 c a','StarPos': [ 484.125 , -31 , -311.03125]})
+    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': -5, 'Longitude': 3}, {'StarSystem': '164 G. Canis Majoris', 'Body': '164 G. Canis Majoris 5 c a','StarPos': [ 484.125 , -31 , -311.03125]})
 
 def dbgTouchdownOut():
-    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': 50, 'Longitude': 30}, {'StarSystem': '164 G. Canis Majoris', 'Body': '5 c a','StarPos': [ 484.125 , -31 , -311.03125]})
+    journal_entry("Cmdr", True, "Sol", None, {'event': 'Touchdown', 'Latitude': 50, 'Longitude': 30}, {'StarSystem': '164 G. Canis Majoris', 'Body': '164 G. Canis Majoris 5 c a','StarPos': [ 484.125 , -31 , -311.03125]})
 
 def local_file(name):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
