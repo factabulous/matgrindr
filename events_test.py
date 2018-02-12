@@ -51,7 +51,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Luna')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Go to Sol Luna (12 Ly)", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'}, {} ))
+        self.assertEqual(("Go to Sol (12 Ly)", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'}, {} ))
 
     def test_fsd_event_correct_system(self):
         """
@@ -114,7 +114,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Earth')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Go to Sol Earth (12 Ly)", mats.res), ev.process( { 'event': 'Liftoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
+        self.assertEqual(("Go to Sol (12 Ly)", mats.res), ev.process( { 'event': 'Liftoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
 
     def test_takeoff_event_correct_system(self):
         """
