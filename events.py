@@ -28,6 +28,22 @@ class EventEngine():
             if k not in d:
                 return False
         return True
+
+    def report_keys(self, event, state, keys):
+        """
+        Reports on presence of names keys (in list) in the event/state stores. 
+        reporting them using the given name, e.g.:
+            <key> [Yes|No] [Yes|No}
+        """
+
+        def rep_key(store, key):
+            return "Yes" if key in store else "No"
+        
+        fmt = "{:10s} {:>10s} {:>10s}"
+        print(fmt.format("key", "event", "state"))
+        for k in keys:
+            print(fmt.format(k, rep_key(event, k), rep_key(state, k)))
+               
         
     def event_in(self, d, keys):
         """
@@ -115,9 +131,15 @@ class EventEngine():
             self.remove_latlon()
             location_changed = True
 
+        if location_changed:
+            keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
+            self.report_keys(entry, state, keys)
+
         if location_changed and self.is_on_planet():
+            print("On a planet")
             target = self._materials.matches(self.location())
             if target:
+                print("Found a resource on planet")
                 mats = set(target['materials']).intersection(self._requirements)
                 self._visited.set_visited(self.location())
                 return ("Collect "+",".join(mats),)
@@ -125,8 +147,12 @@ class EventEngine():
         if location_changed and self.keys_in(params, ['StarPos']):
             distance, closest = self._materials.closest(params['StarPos'], self._requirements)
             if closest and same(closest['system'], self._location['system']):
+                print("Are in correct system")
                 if not self.on_correct_body(params, closest):
+                    print("Not on right body")
                     return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
+                else:
+                    return("Navigate to target location in planet", closest)
             return ("Go to {} {} ({:1.0f} Ly)".format(closest['system'], closest['body'], distance), closest)
 
 
