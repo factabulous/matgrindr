@@ -141,18 +141,14 @@ class EventEngine():
             if target:
                 print("Found a resource on planet")
                 mats = set(target['materials']).intersection(self._requirements)
-                self._visited.set_visited(self.location())
+                self._visited.set_visited(target)
                 return ("Collect "+",".join(mats),)
 
         if location_changed and self.keys_in(params, ['StarPos']):
             distance, closest = self._materials.closest(params['StarPos'], self._requirements)
             if closest and same(closest['system'], self._location['system']):
                 print("Are in correct system")
-                if not self.on_correct_body(params, closest):
-                    print("Not on right body")
-                    return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
-                else:
-                    return("Navigate to target location in planet", closest)
+                return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
             return ("Go to {} {} ({:1.0f} Ly)".format(closest['system'], closest['body'], distance), closest)
 
 
