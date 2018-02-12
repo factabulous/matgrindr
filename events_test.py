@@ -108,13 +108,13 @@ class EventsTest(unittest.TestCase):
         self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', 'Body': 'Earth', 'StarPos': [ 0, 0, 0]} ))
         self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
         
-    def test_takeoff_event_wrong_system(self):
+    def test_liftoff_event_wrong_system(self):
         """
         test when systems do not match we ask for the system to show
         """
         mats = FakeMaterials('Sol', 'Earth')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Go to Sol Earth (12 Ly)", mats.res), ev.process( { 'event': 'Takeoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
+        self.assertEqual(("Go to Sol Earth (12 Ly)", mats.res), ev.process( { 'event': 'Liftoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
 
     def test_takeoff_event_correct_system(self):
         """
@@ -122,7 +122,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Mercury')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Supercruise to Sol Mercury", mats.res), ev.process( { 'event': 'Takeoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
+        self.assertEqual(("Supercruise to Sol Mercury", mats.res), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
 
     def test_update_location_for_fsd_jump(self):
         """

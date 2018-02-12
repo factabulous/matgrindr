@@ -105,12 +105,12 @@ class EventEngine():
 
         params = self.make_params(entry, state)
         location_changed = False
-        if self.event_in(params, ['Touchdown', 'StartUp', 'Takeoff', 'FSDJump', 'Location', 'SupercruiseExit']):
+        if self.event_in(params, ['Touchdown', 'StartUp', 'Liftoff', 'FSDJump', 'Location', 'SupercruiseExit', 'SupercruiseEntry']):
             # These events can change our location
             self.update_location( params )
             location_changed = True
 
-        if self.event_in(params, ['Takeoff', 'FSDJump']):
+        if self.event_in(params, ['Liftoff', 'FSDJump', 'SupercruiseEntry']):
             # These events make us want to ignore latlon if we have one
             self.remove_latlon()
             location_changed = True
