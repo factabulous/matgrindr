@@ -53,6 +53,9 @@ class EventEngine():
             self._location['lon'] = params['Longitude']
 
         return self._location
+    def remove_latlon(self):
+        self._location['lat'] = None
+        self._location['lon'] = None
 
     def location(self): 
         """
@@ -95,27 +98,32 @@ class EventEngine():
         print("[matgrindr] Event {}".format(entry['event']))
 
         params = self.make_params(entry, state)
-        if self.event_in(params, ['Takeoff', 'FSDJump', 'StartUp']) and self.keys_in(params, ['StarPos', 'StarSystem']):
+        location_changed = False
+        if self.event_in(params, ['StartUp', 'Takeoff', 'FSDJump', 'Location', 'SupercruiseExit']):
+            # These events can change our location
             self.update_location( params )
+            location_changed = True
+
+        if self.event_in(params, ['Takeoff', 'FSDJump']):
+            # These events make us want to ignore latlon if we have one
+            self.remove_latlon()
+            location_changed = True
+
+        if self.event_in(params, ['Touchdown']):
+            self.update_location( params )
+            location_changed = True
+
+        if location_changed and self.keys_in(params, ['StarPos']):
             distance, closest = self._materials.closest(params['StarPos'], self._requirements)
-            if closest and same(closest['system'], params['StarSystem']):
-                target = self._materials.local(params['StarSystem'], closest['body'])
-                if target:
-                    return ("Supercruise to {} {}".format(target[0]['system'], target[0]['body']), target[0])
-                return ("Unexpected supercruise to {} {}".format(closest['system'], closest['body']), closest)
+            if closest and same(closest['system'], self._location['system']):
+                if not 'ShortBody' in params or not same(closest['body'], params['ShortBody']):
+                    return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
+                else:
+                    target = self._materials.matches(self.location())
+                    if target:
+                        mats = set(target['materials']).intersection(self._requirements)
+                        self._visited.set_visited(self.location())
+                        return ("Collect "+",".join(mats),)
             return ("Go to {} {} ({:1.0f} Ly)".format(closest['system'], closest['body'], distance), closest)
 
-        if self.event_in(params, ['SupercruiseExit', 'Location']):
-            # Useful for finding the body we are at
-            self.update_location( params )
-            
-        if self.event_in(params, ['Touchdown']) and self.keys_in(params, ['Latitude', 'Longitude' ]):
-            self.update_location( params )
-            target = self._materials.matches(self.location())
-            if target:
-                mats = set(target['materials']).intersection(self._requirements)
-                self._visited.set_visited(self.location())
-                return ("Collect "+",".join(mats),)
-            else:
-                print("Failed to find touchdown target")
-        return None
+

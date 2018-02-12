@@ -4,14 +4,15 @@ import unittest
 import events
 
 class FakeMaterials():
-    def __init__(self, system_name, body_name = None, lat = 0, lon = 0, mats = []):
+    def __init__(self, system_name, body_name = None, lat = None, lon = None, mats = []):
         self.system_name = system_name
         self.body_name = body_name
         self.lat = lat
         self.lon = lon
         self.mats = mats
         self.res = { 'system': self.system_name, 'body': self.body_name, 
-                 'lat': self.lat, 'lon': self.lon, 'materials': self.mats }
+                 'lat': self.lat, 'lon': self.lon, 'materials': self.mats,
+                 'x': 0, 'y': 0, 'z': 0 }
 
     def closest(self, pos1, pos2):
         if not self.system_name:
@@ -19,10 +20,11 @@ class FakeMaterials():
         return (12, self.res)
 
     def matches(self, loc):
-        return self.res
+        # We only check lat for a match
+        return self.res if self.res['lat'] and self.res['lat'] == loc['lat'] else None
 
     def local(self, system, planet):
-        return [ self.res ]
+        return [ self.res ] if self.res['lat'] else []
 
 class NoneVisited():
     def is_visited(self, loc):
@@ -68,7 +70,7 @@ class EventsTest(unittest.TestCase):
         ev = events.EventEngine(mats, None, NoneVisited())
         self.assertEqual(("Supercruise to SOL MERCURY", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
-    def _test_location_event_correct_system(self):
+    def test_location_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
         (Location even no longer causes nav events)
@@ -92,8 +94,7 @@ class EventsTest(unittest.TestCase):
         visited = NoneVisited()
         mats = FakeMaterials('Sol', 'Earth', 13, 67, ['Iron', 'Gold'])
         ev = events.EventEngine(mats, ['Gold'], visited)
-        ev.process( {'event': 'Location', 'StarSystem': 'Sol', "Body": 'Earth'}, {} )
-        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth'} ))
+        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth', 'StarPos': [ 0, 0, 0]} ))
         self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
 
     def test_touchdown_at_target_wrong_case(self):
@@ -104,8 +105,7 @@ class EventsTest(unittest.TestCase):
         visited = NoneVisited()
         mats = FakeMaterials('SOL', 'EARTH', 13, 67, ['Iron', 'Gold'])
         ev = events.EventEngine(mats, ['Gold'], visited)
-        ev.process( { 'event': 'SupercruiseExit', 'StarSystem': 'Sol', 'Body': 'Earth' }, {} )
-        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {} ))
+        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', 'Body': 'Earth', 'StarPos': [ 0, 0, 0]} ))
         self.assertEqual( { 'system': 'Sol', 'body': 'Earth', 'lat': 13, 'lon': 67 }, visited.captured_visit())
         
     def test_takeoff_event_wrong_system(self):
