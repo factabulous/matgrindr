@@ -63,6 +63,9 @@ class EventEngine():
         """
         return self._location
 
+    def is_on_planet(self):
+        return 'lat' in self._location and self._location['lat'] != None
+
     def short_body(self, system, body):
         """
         Returns a field that contains
@@ -112,17 +115,18 @@ class EventEngine():
             self.remove_latlon()
             location_changed = True
 
+        if location_changed and self.is_on_planet():
+            target = self._materials.matches(self.location())
+            if target:
+                mats = set(target['materials']).intersection(self._requirements)
+                self._visited.set_visited(self.location())
+                return ("Collect "+",".join(mats),)
+
         if location_changed and self.keys_in(params, ['StarPos']):
             distance, closest = self._materials.closest(params['StarPos'], self._requirements)
             if closest and same(closest['system'], self._location['system']):
                 if not self.on_correct_body(params, closest):
                     return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
-                else:
-                    target = self._materials.matches(self.location())
-                    if target:
-                        mats = set(target['materials']).intersection(self._requirements)
-                        self._visited.set_visited(self.location())
-                        return ("Collect "+",".join(mats),)
             return ("Go to {} {} ({:1.0f} Ly)".format(closest['system'], closest['body'], distance), closest)
 
 
