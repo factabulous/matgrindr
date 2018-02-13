@@ -2,6 +2,7 @@
 
 import sys
 from util import same
+import location
 
 class EventEngine():
     """
@@ -19,6 +20,7 @@ class EventEngine():
         self._requirements = requirements
         self._visited = visited
         self._location = {}
+        self._location2 = location.Location()
 
     def keys_in(self, d, keys):
         """
@@ -80,7 +82,7 @@ class EventEngine():
         return self._location
 
     def is_on_planet(self):
-        return 'lat' in self._location and self._location['lat'] != None
+        return self._location2.has_latlon()
 
     def short_body(self, system, body):
         """
@@ -109,18 +111,59 @@ class EventEngine():
     def on_correct_body(self, params, closest):
         return 'ShortBody' in params and same(closest['body'], params['ShortBody'])
 
+    def is_event_with_params(self, event, event_names, params):
+        """
+        Checks if the event contains an 'event' key containing on
+        of 'event_names' and also has keys from all the values in 'params'
+        """
+        if 'event' in event and event['event'] in event_names:
+            for k in params:
+                if k not in event:
+                    return False
+            return True
+        return False
+
     def process(self, entry, state):
         """
         Decides what we should do given a new journal event. Returns either
         None or a tuple with fields indicating what has updated. Contains
             action - describes what to do
             location - one of the mats hashes with system, planet, lat, lon, mats
+
+        Body is reported by:
+            Location
+            SupercruiseExit
+        Latitude is reported by:
+            Location
+            Liftoff
+            Touchdown
+        StarPos is reported by:
+            Location
+            FSDJump
+        StarSystem is reported by: 
+            Docked
+            FSDJump
+            Location
+            StartJump
+            SupercruiseEntry
+            SupercruiseExit
         """
 
         print("[matgrindr] Event {}".format(entry['event']))
 
         params = self.make_params(entry, state)
         location_changed = False
+        system_ev = ['FSDJump', 'Location']
+        body_ev = ['SupercruiseExit', 'Location']
+        latlon_ev = ['Touchdown', 'Location']
+
+        if self.is_event_with_params(params, system_ev + body_ev + latlon_ev, ['StarSystem', 'StarPos']):
+            self._location2.change_system(params['StarSystem'], params['StarPos'])
+        if self.is_event_with_params(params, body_ev + latlon_ev, ['ShortBody']):
+            self._location2.change_body(params['ShortBody'])
+        if self.is_event_with_params(params, latlon_ev, ['Latitude', 'Longitude']):
+            self._location2.change_latlon(params['Latitude'], params['Longitude'])
+
         if self.event_in(params, ['Touchdown', 'StartUp', 'Liftoff', 'FSDJump', 'Location', 'SupercruiseExit', 'SupercruiseEntry']):
             # These events can change our location
             self.update_location( params )
@@ -131,6 +174,7 @@ class EventEngine():
             self.remove_latlon()
             location_changed = True
 
+        #location_changed = self._location2.is_changed() 
         if location_changed:
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
@@ -146,7 +190,7 @@ class EventEngine():
 
         if location_changed and self.keys_in(params, ['StarPos']):
             distance, closest = self._materials.closest(params['StarPos'], self._requirements)
-            if closest and same(closest['system'], self._location['system']):
+            if closest and same(closest['system'], self.location()['system']):
                 print("Are in correct system")
                 return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
             return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest)
