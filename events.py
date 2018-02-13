@@ -158,6 +158,12 @@ class EventEngine():
 
             if self._location.has_system():
                 distance, closest = self._materials.closest(self._location.pos(), self._requirements)
+                if self._location.has_body():
+                    # See if there is another location on this body
+                    local = self._materials.local(self._location.system(), self._location.body())
+                    if local:
+                        print("More mats on same body")
+                        return ("Travel to new coordinates", local[0])
                 if closest and same(closest['system'], self._location.system()):
                     print("Are in correct system")
                     return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)

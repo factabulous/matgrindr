@@ -124,6 +124,15 @@ class EventsTest(unittest.TestCase):
         ev = events.EventEngine(mats, None, NoneVisited())
         self.assertEqual(("Supercruise to Sol Mercury", mats.res), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
 
+    def test_liftoff_event_correct_body(self):
+        """
+        test when we are lifting off from a body that has a site we have not
+        yet visited - probably means multiple sites on a body
+        """
+        mats = FakeMaterials('Sol', 'Mercury', lat=1, lon=2)
+        ev = events.EventEngine(mats, None, NoneVisited())
+        self.assertEqual(("Travel to new coordinates", mats.res), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol', 'Body': 'Mercury'} ))
+
     def test_short_body(self):
         mats = FakeMaterials('Sol', 'Mercury')
         ev = events.EventEngine(mats, None, NoneVisited())
