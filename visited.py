@@ -67,7 +67,7 @@ class Visited():
         v = self.find(location)
         if v:
             v['at'] = when
-            print("Setting previously site to 'visisted' again")
+            print("Setting previously site to 'visited' again")
         else:
             location = location.copy()
             location['at'] = when
