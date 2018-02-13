@@ -5,10 +5,19 @@ import math
 from util import same
 
 class Materials():
-    def __init__(self, filename, visited = None):
+    def __init__(self, filename = None, visited = None):
         self._visited = visited
-        with open(filename, "rt") as mats_file:
-            self._materials = json.load(mats_file)
+        self._materials = {}
+        if filename:
+            with open(filename, "rt") as mats_file:
+                self._materials = json.load(mats_file)
+
+    def reload(self, mats):
+        """
+        Loads a new set of mats - used for async updates, though not 
+        threadsafe so needs to be called on main GUI thread
+        """
+        self._materials = mats
 
     def names(self):
         """

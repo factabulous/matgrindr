@@ -16,6 +16,25 @@ class AllVisited():
         return True
 
 class MaterialsTest(unittest.TestCase):
+    def test_names_no_mats(self):
+        """
+        Check you can initialise a mats object without mats
+        """
+        m = mats.Materials()
+        self.assertEqual(set(), m.names())
+
+    def test_reload(self):
+        """
+        Check you can initialise a mats object without mats and then add the 
+        mats later
+        """
+        m = mats.Materials()
+        m2 = mats.Materials('mats_test.json')
+        m.reload(m2._materials)
+        self.assertEqual(set([ "Carbon", "Iron", "Nickel", "Phosphorus", "Sulphur",
+    "Chromium", "Manganese", "Zirconium", "Mercury", "Tungsten",
+    "Antimony", "Tin", "Germanium" ]), m.names())
+
     def test_names(self):
         m = mats.Materials("mats_test.json", NoneVisited())
         self.assertEqual(set([ "Carbon", "Iron", "Nickel", "Phosphorus", "Sulphur",
