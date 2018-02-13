@@ -143,9 +143,7 @@ class EventEngine():
         if self.is_event_with_params(params, latlon_ev, ['Latitude', 'Longitude']):
             self._location.change_latlon(params['Latitude'], params['Longitude'])
 
-        location_changed = self._location.is_changed() 
-
-        if location_changed:
+        if self._location.is_changed():
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
 
@@ -159,8 +157,8 @@ class EventEngine():
                     return ("Collect "+",".join(mats),)
 
             if self._location.has_system():
-                distance, closest = self._materials.closest(params['StarPos'], self._requirements)
-                if closest and same(closest['system'], self.location()['system']):
+                distance, closest = self._materials.closest(self._location.pos(), self._requirements)
+                if closest and same(closest['system'], self._location.system()):
                     print("Are in correct system")
                     return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
                 return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest)
