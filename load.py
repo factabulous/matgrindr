@@ -19,7 +19,7 @@ this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 
-this.debug = 0
+this.debug = True if platform == 'darwin' else False
 
 window=tk.Tk()
 window.withdraw()
