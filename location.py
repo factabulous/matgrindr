@@ -77,3 +77,22 @@ class Location():
         """
         return self._is_dirty
 
+    def pos(self):
+        """
+        Returns the star position as a tuple with x, y, z values
+        """
+        if 'x' in self._loc:
+            return ( self._loc['x'], self._loc['y'], self._loc['z'] )
+        return None
+
+    def latlon(self):
+        if 'lat' in self._loc:
+            return ( self._loc['lat'], self._loc['lon'] )
+        return None
+
+    def system(self):
+        return self._loc['system'] if 'system' in self._loc else None
+
+    def body(self):
+        return self._loc['body'] if 'body' in self._loc else None
+
