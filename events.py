@@ -79,7 +79,7 @@ class EventEngine():
         """
         Returns the current location we have built up from messages
         """
-        return self._location
+        return self._location2.get()
 
     def is_on_planet(self):
         return self._location2.has_latlon()
@@ -153,9 +153,9 @@ class EventEngine():
 
         params = self.make_params(entry, state)
         location_changed = False
-        system_ev = ['FSDJump', 'Location']
-        body_ev = ['SupercruiseExit', 'Location']
-        latlon_ev = ['Touchdown', 'Location']
+        system_ev = ['FSDJump', 'Location', 'StartUp']
+        body_ev = ['SupercruiseExit', 'Location', 'StartUp']
+        latlon_ev = ['Touchdown', 'Location', 'Liftoff', 'StartUp']
 
         if self.is_event_with_params(params, system_ev + body_ev + latlon_ev, ['StarSystem', 'StarPos']):
             self._location2.change_system(params['StarSystem'], params['StarPos'])
