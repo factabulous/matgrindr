@@ -51,7 +51,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Luna')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Go to Sol (12 Ly)", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'}, {} ))
+        self.assertEqual(("Go to Sol (12 Ly)", mats.res, False), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'}, {} ))
 
     def test_fsd_event_correct_system(self):
         """
@@ -59,7 +59,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Mercury')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Supercruise to Sol Mercury", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+        self.assertEqual(("Supercruise to Sol Mercury", mats.res, True), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
     def test_fsd_event_correct_system_case_wrong(self):
         """
@@ -68,7 +68,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('SOL', 'MERCURY')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Supercruise to SOL MERCURY", mats.res), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+        self.assertEqual(("Supercruise to SOL MERCURY", mats.res, True), ev.process( { 'event': 'FSDJump', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
     def test_location_event_correct_system(self):
         """
@@ -77,7 +77,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Venus')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Supercruise to Sol Venus", mats.res), ev.process( { 'event': 'Location', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+        self.assertEqual(("Supercruise to Sol Venus", mats.res, True), ev.process( { 'event': 'Location', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
     def test_startup_event_correct_system(self):
         """
@@ -85,7 +85,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Earth')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Supercruise to Sol Earth", mats.res), ev.process( { 'event': 'StartUp', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
+        self.assertEqual(("Supercruise to Sol Earth", mats.res, True), ev.process( { 'event': 'StartUp', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
     def test_touchdown_at_target(self):
         """
@@ -114,7 +114,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Earth')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Go to Sol (12 Ly)", mats.res), ev.process( { 'event': 'Liftoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
+        self.assertEqual(("Go to Sol (12 Ly)", mats.res, False), ev.process( { 'event': 'Liftoff'}, {  'StarPos': [ 0, 0, 0] , 'StarSystem': 'Arcturus'} ))
 
     def test_liftoff_event_correct_system(self):
         """
@@ -122,7 +122,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Mercury')
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Supercruise to Sol Mercury", mats.res), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
+        self.assertEqual(("Supercruise to Sol Mercury", mats.res, True), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
 
     def test_liftoff_event_correct_body(self):
         """
@@ -131,7 +131,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Mercury', lat=1, lon=2)
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Travel to new coordinates", mats.res), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol', 'Body': 'Mercury'} ))
+        self.assertEqual(("Travel to new coordinates", mats.res, True), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol', 'Body': 'Mercury'} ))
 
     def test_short_body(self):
         mats = FakeMaterials('Sol', 'Mercury')

@@ -144,6 +144,7 @@ class EventEngine():
             self._location.change_latlon(params['Latitude'], params['Longitude'])
 
         if self._location.is_changed():
+            distplay_laylog = True
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
 
@@ -163,10 +164,10 @@ class EventEngine():
                     local = self._materials.local(self._location.system(), self._location.body())
                     if local:
                         print("More mats on same body")
-                        return ("Travel to new coordinates", local[0])
+                        return ("Travel to new coordinates", local[0], True)
                 if closest and same(closest['system'], self._location.system()):
                     print("Are in correct system")
-                    return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
-                return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest)
+                    return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest, True)
+                return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest, False)
 
 
