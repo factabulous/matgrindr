@@ -9,40 +9,41 @@ class Location():
 
     def __init__(self):
         self._loc = {}
+        self._is_dirty = False
 
-    def set( self, system = None, body = None, pos = None, latlon = None):
+    def change_system(self, system, pos):
         """
-        Allows the location to be set. Note that it applies the nesting 
-        that we expect - in that you cannot store a lat lon without a body
-        etc
+        Location switches systems(s). The body and latlon are invalidated.
         """
-        if system:
-            self._loc['system'] = system
-            if pos:
-                if len(pos) ==3:
-                    self._loc['x'] = pos[0]
-                    self._loc['y'] = pos[1]
-                    self._loc['z'] = pos[2]
-                else:
-                    raise ValueError("Expected pos to be length 3")
-            if body:
-                self._loc['body'] = body
-                if latlon:
-                    if len(latlon) ==2:
-                        self._loc['lat'] = latlon[0]
-                        self._loc['lon'] = latlon[1]
-                    else:
-                        raise ValueError("Expected latlon to be length 2")
+        self._loc['system'] = system
+        self._loc['x'] = pos[0]
+        self._loc['y'] = pos[1]
+        self._loc['z'] = pos[2]
+        if 'body' in self._loc:
+            del self._loc['body']
+        if 'lat' in self._loc:
+            del self._loc['lat']
+            del self._loc['lon']
+        self._is_dirty = True
+        return self
 
-    def valid(self):
+    def change_body(self, body):
         """
-        Indicates we have at least some location information - at least a
-        star position and a system name
-        Note that we just check for 'x' as we only (at the moment) have ways
-        to set all 3 of x, y, and z at the same time.
+        Change the body within the sytem - latlon would be invalid, system
+        is retained
         """
+        self._loc['body'] = body
+        if 'lat' in self._loc:
+            del self._loc['lat']
+            del self._loc['lon']
+        self._is_dirty = True
+        return self
 
-        return 'x' in self._loc and 'system' in self._loc and self._loc['system']
+    def change_latlon(self, lat, lon):
+        self._loc['lat'] = lat
+        self._loc['lon'] = lon
+        self._is_dirty = True
+        return self
 
     def has_latlon(self):
         """
@@ -50,6 +51,12 @@ class Location():
         only checks one as they are always set in a pair
         """
         return 'lat' in self._loc
+
+    def has_system(self):
+        """
+        Checks we know which system we are in (name and position)
+        """
+        return 'system' in self._loc and 'x' in self._loc
 
     def has_body(self):
         """
@@ -61,8 +68,12 @@ class Location():
         """
         Returns a copy of the location info
         """
+        self._is_dirty = False
         return self._loc.copy()
 
-    def remove_latlon(self):
-        del self._loc['lat']
-        del self._loc['lon']
+    def is_changed(self):
+        """
+        Indicates if the location has changed since last read
+        """
+        return self._is_dirty
+
