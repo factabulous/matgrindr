@@ -11,23 +11,28 @@ class Location():
         self._loc = {}
 
     def set( self, system = None, body = None, pos = None, latlon = None):
+        """
+        Allows the location to be set. Note that it applies the nesting 
+        that we expect - in that you cannot store a lat lon without a body
+        etc
+        """
         if system:
             self._loc['system'] = system
-        if body:
-            self._loc['body'] = body
-        if latlon:
-            if len(latlon) ==2:
-                self._loc['lat'] = latlon[0]
-                self._loc['lon'] = latlon[1]
-            else:
-                raise ValueError("Expected latlon to be length 2")
-        if pos:
-            if len(pos) ==3:
-                self._loc['x'] = pos[0]
-                self._loc['y'] = pos[1]
-                self._loc['z'] = pos[2]
-            else:
-                raise ValueError("Expected pos to be length 3")
+            if pos:
+                if len(pos) ==3:
+                    self._loc['x'] = pos[0]
+                    self._loc['y'] = pos[1]
+                    self._loc['z'] = pos[2]
+                else:
+                    raise ValueError("Expected pos to be length 3")
+            if body:
+                self._loc['body'] = body
+                if latlon:
+                    if len(latlon) ==2:
+                        self._loc['lat'] = latlon[0]
+                        self._loc['lon'] = latlon[1]
+                    else:
+                        raise ValueError("Expected latlon to be length 2")
 
     def valid(self):
         """
@@ -57,3 +62,7 @@ class Location():
         Returns a copy of the location info
         """
         return self._loc.copy()
+
+    def remove_latlon(self):
+        del self._loc['lat']
+        del self._loc['lon']
