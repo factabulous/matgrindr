@@ -124,26 +124,6 @@ class EventsTest(unittest.TestCase):
         ev = events.EventEngine(mats, None, NoneVisited())
         self.assertEqual(("Supercruise to Sol Mercury", mats.res), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'} ))
 
-    def _test_update_location_for_fsd_jump(self):
-        """
-        FSD Jumps return a StarSystem and a Body
-        """
-        mats = FakeMaterials('Sol', 'Mercury')
-        ev = events.EventEngine(mats, None, NoneVisited())
-        ev.update_location( { 'StarSystem': 'Sol', 'ShortBody': 'Mars' } )
-        self.assertEqual( 'Sol', ev.location()['system'])
-        self.assertEqual( 'Mars', ev.location()['body'])
-
-    def _test_update_location_for_touchdown(self):
-        """
-        Touchdown only contains Lat and Lon, no Body or StarSystem
-        """
-        mats = FakeMaterials('Sol', 'Mercury')
-        ev = events.EventEngine(mats, None, NoneVisited())
-        ev.update_location( { 'Latitude': 9.1827, 'Longitude': 19.1863 } )
-        self.assertEqual( 9.1827, ev.location()['lat'])
-        self.assertEqual( 19.1863, ev.location()['lon'])
-
     def test_short_body(self):
         mats = FakeMaterials('Sol', 'Mercury')
         ev = events.EventEngine(mats, None, NoneVisited())

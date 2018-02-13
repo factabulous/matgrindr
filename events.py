@@ -19,8 +19,7 @@ class EventEngine():
         self._materials = materials
         self._requirements = requirements
         self._visited = visited
-        self._location = {}
-        self._location2 = location.Location()
+        self._location = location.Location()
 
     def keys_in(self, d, keys):
         """
@@ -55,34 +54,14 @@ class EventEngine():
             return d['event'] in keys
         return False
 
-    def update_location(self, params = {}): 
-        """
-        Extracts as much location information as possible from data
-        in the format of the journal messages
-        """
-        if 'StarSystem' in params:
-            self._location = { 'system': params['StarSystem'] }
-
-            if 'ShortBody' in params:
-                self._location['body'] = params['ShortBody']
-
-        if self.keys_in( params, ['Latitude', 'Longitude' ]):
-            self._location['lat'] = params['Latitude']
-            self._location['lon'] = params['Longitude']
-
-        return self._location
-    def remove_latlon(self):
-        self._location['lat'] = None
-        self._location['lon'] = None
-
     def location(self): 
         """
         Returns the current location we have built up from messages
         """
-        return self._location2.get()
+        return self._location.get()
 
     def is_on_planet(self):
-        return self._location2.has_latlon()
+        return self._location.has_latlon()
 
     def short_body(self, system, body):
         """
@@ -158,41 +137,32 @@ class EventEngine():
         latlon_ev = ['Touchdown', 'Location', 'Liftoff', 'StartUp']
 
         if self.is_event_with_params(params, system_ev + body_ev + latlon_ev, ['StarSystem', 'StarPos']):
-            self._location2.change_system(params['StarSystem'], params['StarPos'])
+            self._location.change_system(params['StarSystem'], params['StarPos'])
         if self.is_event_with_params(params, body_ev + latlon_ev, ['ShortBody']):
-            self._location2.change_body(params['ShortBody'])
+            self._location.change_body(params['ShortBody'])
         if self.is_event_with_params(params, latlon_ev, ['Latitude', 'Longitude']):
-            self._location2.change_latlon(params['Latitude'], params['Longitude'])
+            self._location.change_latlon(params['Latitude'], params['Longitude'])
 
-        if self.event_in(params, ['Touchdown', 'StartUp', 'Liftoff', 'FSDJump', 'Location', 'SupercruiseExit', 'SupercruiseEntry']):
-            # These events can change our location
-            self.update_location( params )
-            location_changed = True
+        location_changed = self._location.is_changed() 
 
-        if self.event_in(params, ['Liftoff', 'FSDJump', 'SupercruiseEntry']):
-            # These events make us want to ignore latlon if we have one
-            self.remove_latlon()
-            location_changed = True
-
-        #location_changed = self._location2.is_changed() 
         if location_changed:
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
 
-        if location_changed and self.is_on_planet():
-            print("On a planet")
-            target = self._materials.matches(self.location())
-            if target:
-                print("Found a resource on planet")
-                mats = set(target['materials']).intersection(self._requirements)
-                self._visited.set_visited(target)
-                return ("Collect "+",".join(mats),)
+            if self.is_on_planet():
+                print("On a planet")
+                target = self._materials.matches(self.location())
+                if target:
+                    print("Found a resource on planet")
+                    mats = set(target['materials']).intersection(self._requirements)
+                    self._visited.set_visited(target)
+                    return ("Collect "+",".join(mats),)
 
-        if location_changed and self.keys_in(params, ['StarPos']):
-            distance, closest = self._materials.closest(params['StarPos'], self._requirements)
-            if closest and same(closest['system'], self.location()['system']):
-                print("Are in correct system")
-                return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
-            return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest)
+            if self._location.has_system():
+                distance, closest = self._materials.closest(params['StarPos'], self._requirements)
+                if closest and same(closest['system'], self.location()['system']):
+                    print("Are in correct system")
+                    return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest)
+                return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest)
 
 
