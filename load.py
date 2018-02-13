@@ -199,8 +199,15 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
                     this.target_lat.set( this.target['lat'] )
                     this.target_lon.set( this.target['lon'] )
                 else:
-                    this.target_lat.set( "" )
-                    this.target_lon.set( "" )
+                    no_value = "---"
+                    this.target_lat.set( no_value )
+                    this.target_lon.set( no_value )
+                    this.current_lat.set( no_value )
+                    this.current_lon.set( no_value )
+                    this.current_heading.set( no_value )
+                    this.current_distance.set( no_value )
+                    this.target_heading.set(  no_value )
+                    this.target_attitude.set(  no_value )
         if this.visited.is_dirty():
             config.set("matgrindr.visited", this.visited.save())
 
