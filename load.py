@@ -62,6 +62,10 @@ def update():
     try:
         while True:
             status = this.status_queue.get_nowait()
+            if 'mats' in status:
+                this.mats.reload(status['mats'])
+            if 'error' in status:
+                print("Error: " + status['error'])
 	    if 'Latitude' in status and 'Longitude' in status:
                 this.current_lat.set(status['Latitude'])
                 this.current_lon.set(status['Longitude'])
@@ -176,11 +180,12 @@ def plugin_app(parent):
         status_loc = local_file("status.json")
     else:
         status_loc = os.path.realpath(os.path.join( config.default_journal_dir, "status.json"))
+
+    watcher.MatsLoader( local_file("mats.json"), this.status_queue).start()
       
     this.watcher = watcher.StatusWatcher(
         status_loc,
         this.status_queue)
-    this.watcher.daemon = True
     this.watcher.start()
     parent.after(100, update)
     return this.status_frame
