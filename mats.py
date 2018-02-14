@@ -26,7 +26,7 @@ class Materials():
         res = set()
         for loc in self._materials:
             res.update(loc['materials'])
-        return res
+        return sorted(res)
 
     def distance(self, mat, loc):
         """
@@ -76,5 +76,5 @@ class Materials():
         for m in self._materials:
             if same(m['system'], system) and same(m['body'], body) and not self._visited.is_visited(m):
                 locs.append(m)
-        return locs
+        return sorted(locs, key = lambda x : x['lat'])
 
