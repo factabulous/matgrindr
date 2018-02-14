@@ -7,7 +7,8 @@
 * Why doesn't touchdown work - doesn't display the mats - DONE
 * can I get messages into the app log? DONE
 * Descent speed suggestion would be good.
-* Async loading of mats.json
+* Async loading of mats.json DONE TEST
+* Getting initial state right upon load
 * Display distance to a system when not in it DONE - TEST
 * Add a 'skip' button to skip the current suggestion
 * Add display of what is present at current target
