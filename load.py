@@ -183,6 +183,7 @@ def plugin_app(parent):
     tk.Label(this.status_frame, text="Attitude").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.target_attitude = tk.StringVar()
     tk.Label(this.status_frame, textvariable=this.target_attitude).grid(row=h.row(), column=h.col(), sticky=tk.W)
+    self.blank_data_fields()
     if this.debug:
         h.newrow()
         tk.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=h.row(), column = h.col(), sticky=tk.W)
@@ -192,7 +193,6 @@ def plugin_app(parent):
         tk.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=h.row(),column =h.col(), sticky=tk.W)
         h.newrow()
         tk.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=h.row(), column =h.col(), sticky=tk.W)
-        self.blank_data_fields()
 
     # TODO : Not the right value for Darwin - right value for testing
     if platform == "darwin":
