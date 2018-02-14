@@ -26,6 +26,7 @@ class MatsLoader(threading.Thread):
         try:
             m = mats.Materials(self.filename)
             self.queue.put( { 'mats': m._materials } )
+            print("Async mats loader is completed")
         except:
             self.queue.put( { 'error': 'Failed to load materials ' + str(sys.exc_info()[0]) } )
 

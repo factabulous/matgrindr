@@ -117,22 +117,22 @@ def copy_system_to_clipboard(event):
        window.clipboard_clear()  # clear clipboard contents
        window.clipboard_append(this.target['system'])
 
-def blank_field(self, value):
+def blank_field(value):
     """
     Blanks a field to indicate 'no value present'
     """
     value.set( this.NO_VALUE )
 
-def blank_data_fields(self):
+def blank_data_fields():
     print("Blanking data fields")
-    self.blank_field(this.target_lat)
-    self.blank_field(this.target_lon)
-    self.blank_field(this.current_lat)
-    self.blank_field(this.current_lon)
-    self.blank_field(this.current_heading)
-    self.blank_field(this.current_distance)
-    self.blank_field(this.target_heading)
-    self.blank_field(this.target_attitude)
+    blank_field(this.target_lat)
+    blank_field(this.target_lon)
+    blank_field(this.current_lat)
+    blank_field(this.current_lon)
+    blank_field(this.current_heading)
+    blank_field(this.current_distance)
+    blank_field(this.target_heading)
+    blank_field(this.target_attitude)
 
 def plugin_app(parent):
     """
@@ -186,7 +186,7 @@ def plugin_app(parent):
     tk.Label(this.status_frame, text="Attitude").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.target_attitude = tk.StringVar()
     tk.Label(this.status_frame, textvariable=this.target_attitude).grid(row=h.row(), column=h.col(), sticky=tk.W)
-    self.blank_data_fields()
+    blank_data_fields()
     if this.debug:
         h.newrow()
         tk.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=h.row(), column = h.col(), sticky=tk.W)
@@ -225,7 +225,7 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
                     this.target_lat.set( this.target['lat'] )
                     this.target_lon.set( this.target['lon'] )
                 else:
-                    self.blank_data_fields()
+                    blank_data_fields()
         if this.visited.is_dirty():
             config.set("matgrindr.visited", this.visited.save())
 
