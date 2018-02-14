@@ -144,7 +144,6 @@ class EventEngine():
             self._location.change_latlon(params['Latitude'], params['Longitude'])
 
         if self._location.is_changed():
-            distplay_laylog = True
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
 
