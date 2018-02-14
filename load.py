@@ -65,10 +65,12 @@ def update():
         while True:
             status = this.status_queue.get_nowait()
             if 'mats' in status:
+                print("Mats reload requested")
                 this.mats.reload(status['mats'])
             if 'error' in status:
                 print("Error: " + status['error'])
 	    if 'Latitude' in status and 'Longitude' in status:
+                print("New Lat Long update")
                 this.current_lat.set(status['Latitude'])
                 this.current_lon.set(status['Longitude'])
                 this.current_heading.set(status['Heading'])
@@ -122,6 +124,7 @@ def blank_field(self, value):
     value.set( this.NO_VALUE )
 
 def blank_data_fields(self):
+    print("Blanking data fields")
     self.blank_field(this.target_lat)
     self.blank_field(this.target_lon)
     self.blank_field(this.current_lat)
