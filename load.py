@@ -20,6 +20,7 @@ this = sys.modules[__name__]	# For holding module globals
 this.status_queue = Queue.Queue()
 
 this.debug = True if platform == 'darwin' else False
+this.NO_VALUE = "---" # Used when we don't have a value for a field
 
 window=tk.Tk()
 window.withdraw()
@@ -114,6 +115,22 @@ def copy_system_to_clipboard(event):
        window.clipboard_clear()  # clear clipboard contents
        window.clipboard_append(this.target['system'])
 
+def blank_field(self, value):
+    """
+    Blanks a field to indicate 'no value present'
+    """
+    value.set( this.NO_VALUE )
+
+def blank_data_fields(self):
+    self.blank_field(this.target_lat)
+    self.blank_field(this.target_lon)
+    self.blank_field(this.current_lat)
+    self.blank_field(this.current_lon)
+    self.blank_field(this.current_heading)
+    self.blank_field(this.current_distance)
+    self.blank_field(this.target_heading)
+    self.blank_field(this.target_attitude)
+
 def plugin_app(parent):
     """
     Returns a frame containing the status fields we want to display to the 
@@ -175,6 +192,7 @@ def plugin_app(parent):
         tk.Button(this.status_frame, text="Touchdown Out", command=dbgTouchdownOut).grid(row=h.row(),column =h.col(), sticky=tk.W)
         h.newrow()
         tk.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=h.row(), column =h.col(), sticky=tk.W)
+        self.blank_data_fields()
 
     # TODO : Not the right value for Darwin - right value for testing
     if platform == "darwin":
@@ -204,15 +222,7 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
                     this.target_lat.set( this.target['lat'] )
                     this.target_lon.set( this.target['lon'] )
                 else:
-                    no_value = "---"
-                    this.target_lat.set( no_value )
-                    this.target_lon.set( no_value )
-                    this.current_lat.set( no_value )
-                    this.current_lon.set( no_value )
-                    this.current_heading.set( no_value )
-                    this.current_distance.set( no_value )
-                    this.target_heading.set(  no_value )
-                    this.target_attitude.set(  no_value )
+                    self.blank_data_fields()
         if this.visited.is_dirty():
             config.set("matgrindr.visited", this.visited.save())
 
