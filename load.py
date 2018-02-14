@@ -44,8 +44,9 @@ def local_file(name):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
 def plugin_start():
+    watcher.MatsLoader( local_file("mats.json"), this.status_queue).start()
     this.visited = visited.Visited( config.get("matgrindr.visited")) 
-    this.mats = mats.Materials(local_file("mats.json"), this.visited)
+    this.mats = mats.Materials(None, this.visited)
     selected = config.get("matgrindr.selected") or []
     this.events = events.EventEngine(this.mats, selected, this.visited)
     this._IMG_CLIPBOARD = tk.PhotoImage(file = local_file('clipboard.gif'))
@@ -181,7 +182,6 @@ def plugin_app(parent):
     else:
         status_loc = os.path.realpath(os.path.join( config.default_journal_dir, "status.json"))
 
-    watcher.MatsLoader( local_file("mats.json"), this.status_queue).start()
       
     this.watcher = watcher.StatusWatcher(
         status_loc,
