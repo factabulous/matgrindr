@@ -16,3 +16,7 @@
 * Takeoff does not cause the new location to be calculated - DONE TEST
 * Does not appear to mark locations as visited DONE TEST
 * Work out when to blank lat / lon etc from gui and datastores
+* Split action from state - when you LiftOff you have a Lat / lon but you need
+to be told where to go, no wait for a SCExit!
+* Locations on a planet need to be ordered by distance *if you are on planet*
+ 
