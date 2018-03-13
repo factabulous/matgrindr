@@ -183,7 +183,7 @@ def plugin_app(parent):
     tk.Label(this.status_frame, text="Target Heading").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.target_heading = tk.StringVar()
     tk.Label(this.status_frame, textvariable=this.target_heading).grid(row=h.row(), column=h.col(), sticky=tk.W)
-    tk.Label(this.status_frame, text="Attitude").grid(row=h.row(), column=h.col(), sticky=tk.W)
+    tk.Label(this.status_frame, text="Target Attitude").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.target_attitude = tk.StringVar()
     tk.Label(this.status_frame, textvariable=this.target_attitude).grid(row=h.row(), column=h.col(), sticky=tk.W)
     blank_data_fields()
