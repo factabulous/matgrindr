@@ -22,16 +22,20 @@ def great_circle(start, end, radius):
 
     delta = 2 * asin( sqrt( 
         pow(sin(delta_lat / 2), 2) + cos(start[0]) * cos(end[0]) * pow(sin(delta_lon/2), 2)))
-    return radius * delta
+    return int(radius * delta)
 
 def angle_of_descent(start, end, height, radius):
     """
     Works out the angle of descent needed to hit zero height at the 
-    given end point
+    given end point. We only ask for descent when the angle is more then
+    30 degrees
     """
     horz_distance = great_circle(start, end, radius)
     angle = atan2(-height, horz_distance)
-    return int(round(degrees(angle)))
+    angle = -int(round(degrees(angle)))
+    if angle < 30:
+        return 0
+    return angle
 
 def target_info(now, goal, height, radius):
     """

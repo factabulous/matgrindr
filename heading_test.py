@@ -11,19 +11,22 @@ class HeadingTest(unittest.TestCase):
         self.assertEqual(185, heading.heading((90, 179), (0, 0)))
 
     def test_great_circle(self):
-        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (0, 10), 500), places=3)
-        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (0, -10), 500), places=3)
-        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (-10, 0), 500), places=3)
-        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (10, 0), 500), places=3)
-        self.assertAlmostEqual(174.5329, heading.great_circle((0, 0), (0, 20), 500), places=3)
+        self.assertEqual(87, heading.great_circle((0, 0), (0, 10), 500))
+        self.assertEqual(87, heading.great_circle((0, 0), (0, -10), 500))
+        self.assertEqual(87, heading.great_circle((0, 0), (-10, 0), 500))
+        self.assertEqual(87, heading.great_circle((0, 0), (10, 0), 500))
+        self.assertEqual(174, heading.great_circle((0, 0), (0, 20), 500))
 
     def test_angle_of_descent(self):
         """
         Works out the rate of descent needed to hit zero height at the 
         given end point
         """
-        self.assertEqual(-45, heading.angle_of_descent((0,0), (0,10), radius=500, height=87))
-        self.assertEqual(-63, heading.angle_of_descent((0,0), (0,10), radius=500, height=174))
+        self.assertEqual(45, heading.angle_of_descent((0,0), (0,10), radius=500, height=87))
+        self.assertEqual(63, heading.angle_of_descent((0,0), (0,10), radius=500, height=174))
+        # Make sure we have a cut-off at 30 degrees
+        self.assertEqual(30, heading.angle_of_descent((0,0), (0,10), radius=500, height=50))
+        self.assertEqual(0, heading.angle_of_descent((0,0), (0,10), radius=500, height=49))
         
 
 
