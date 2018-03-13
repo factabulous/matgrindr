@@ -61,6 +61,10 @@ class EventEngine():
         return self._location.get()
 
     def is_on_planet(self):
+        """
+        Indicates if we know lat log - so not really 'on planet' as 
+        takeoff knows latlon
+        """
         return self._location.has_latlon()
 
     def short_body(self, system, body):
@@ -107,7 +111,10 @@ class EventEngine():
         Decides what we should do given a new journal event. Returns either
         None or a tuple with fields indicating what has updated. Contains
             action - describes what to do
-            location - one of the mats hashes with system, planet, lat, lon, mats
+            location - one of the mats hashes with 
+                       system, planet, lat, lon, mats
+            display_target - True or False to determine whether to show the 
+                              target fields or blank them
 
         Body is reported by:
             Location
@@ -143,12 +150,13 @@ class EventEngine():
         if self.is_event_with_params(params, latlon_ev, ['Latitude', 'Longitude']):
             self._location.change_latlon(params['Latitude'], params['Longitude'])
 
-        if self._location.is_changed():
+        location_changed = self._location.is_changed()
+        if location_changed:
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
 
-            if self.is_on_planet():
-                print("On a planet")
+            if params['event'] == 'Touchdown':
+                print("Touchdown")
                 target = self._materials.matches(self.location())
                 if target:
                     print("Found a resource on planet")
@@ -165,7 +173,7 @@ class EventEngine():
                         print("More mats on same body")
                         return ("Travel to new coordinates", local[0], True)
                 if closest and same(closest['system'], self._location.system()):
-                    print("Are in correct system")
+                    print("in correct system")
                     return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest, True)
                 return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest, False)
 
