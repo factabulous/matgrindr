@@ -22,13 +22,13 @@ class HeadingTest(unittest.TestCase):
         Works out the rate of descent needed to hit zero height at the 
         given end point
         """
-        self.assertEqual(45, heading.angle_of_descent((0,0), (0,10), radius=500, height=87))
-        self.assertEqual(63, heading.angle_of_descent((0,0), (0,10), radius=500, height=174))
+        self.assertEqual(45, heading.angle_of_descent((0,0), (0,10), radius=500, height=87000))
+        self.assertEqual(63, heading.angle_of_descent((0,0), (0,10), radius=500, height=174000))
         # Make sure we have a cut-off at 30 degrees
-        self.assertEqual(30, heading.angle_of_descent((0,0), (0,10), radius=500, height=50))
-        self.assertEqual(0, heading.angle_of_descent((0,0), (0,10), radius=500, height=49))
+        self.assertEqual(30, heading.angle_of_descent((0,0), (0,10), radius=500, height=50000))
+        self.assertEqual(0, heading.angle_of_descent((0,0), (0,10), radius=500, height=49000))
         # What happens when we are a long way off
-        self.assertEqual(0, heading.angle_of_descent((0,0), (0,160), radius=500, height=300))
+        self.assertEqual(0, heading.angle_of_descent((0,0), (0,160), radius=500, height=300000))
         
 
 
