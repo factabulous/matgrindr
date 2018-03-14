@@ -33,6 +33,7 @@ def angle_of_descent(start, end, height, radius):
     horz_distance = great_circle(start, end, radius)
     angle = atan2(-height, horz_distance)
     angle = -int(round(degrees(angle)))
+    print("angle_of_descent(h={}, v={}, a={})".format(horz_distance, height, angle))
     if angle < 30:
         return 0
     return angle

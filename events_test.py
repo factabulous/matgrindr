@@ -94,7 +94,9 @@ class EventsTest(unittest.TestCase):
         visited = NoneVisited()
         mats = FakeMaterials('Sol', 'Earth', 13, 67, ['Iron', 'Gold'])
         ev = events.EventEngine(mats, ['Gold'], visited)
-        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth', 'StarPos': [ 0, 0, 0]} ))
+        res = ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', "Body": 'Earth', 'StarPos': [ 0, 0, 0]} )
+        self.assertEqual("Collect Gold", res[0])
+        self.assertFalse(res[2])
         self.assertEqual( mats.res, visited.captured_visit())
 
     def test_touchdown_at_target_wrong_case(self):
@@ -105,7 +107,9 @@ class EventsTest(unittest.TestCase):
         visited = NoneVisited()
         mats = FakeMaterials('SOL', 'EARTH', 13, 67, ['Iron', 'Gold'])
         ev = events.EventEngine(mats, ['Gold'], visited)
-        self.assertEqual(("Collect Gold",), ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', 'Body': 'Earth', 'StarPos': [ 0, 0, 0]} ))
+        res = ev.process( { 'event': 'Touchdown', 'Latitude': 13, 'Longitude': 67}, {'StarSystem': 'Sol', 'Body': 'Earth', 'StarPos': [ 0, 0, 0]} )
+        self.assertEqual("Collect Gold",res[0])
+        self.assertFalse(res[2])
         self.assertEqual( mats.res, visited.captured_visit())
         
     def test_liftoff_event_wrong_system(self):

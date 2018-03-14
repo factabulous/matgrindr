@@ -71,10 +71,10 @@ def update():
                 print("Error: " + status['error'])
 	    if 'Latitude' in status and 'Longitude' in status:
                 print("New Lat Long update")
-                this.current_lat.set(status['Latitude'])
-                this.current_lon.set(status['Longitude'])
-                this.current_heading.set(status['Heading'])
                 if hasattr(this, 'target'):
+                    this.current_lat.set(status['Latitude'])
+                    this.current_lon.set(status['Longitude'])
+                    this.current_heading.set(status['Heading'])
                     info = heading.target_info( 
                         ( this.current_lat.get(), this.current_lon.get()), 
                         ( this.target['lat'], this.target['lon']),

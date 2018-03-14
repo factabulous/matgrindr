@@ -27,6 +27,8 @@ class HeadingTest(unittest.TestCase):
         # Make sure we have a cut-off at 30 degrees
         self.assertEqual(30, heading.angle_of_descent((0,0), (0,10), radius=500, height=50))
         self.assertEqual(0, heading.angle_of_descent((0,0), (0,10), radius=500, height=49))
+        # What happens when we are a long way off
+        self.assertEqual(0, heading.angle_of_descent((0,0), (0,160), radius=500, height=300))
         
 
 
