@@ -18,6 +18,7 @@ from util import GridHelper
 this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
+this.display_hud_elements = False
 
 this.debug = True if platform == 'darwin' else False
 this.NO_VALUE = "---" # Used when we don't have a value for a field
@@ -72,13 +73,14 @@ def update():
 	    if 'Latitude' in status and 'Longitude' in status:
                 print("New Lat Long update")
                 if hasattr(this, 'target'):
-                    this.current_lat.set(status['Latitude'])
-                    this.current_lon.set(status['Longitude'])
-                    this.current_heading.set(status['Heading'])
+                    if this.display_hud_elements:
+                        this.current_lat.set(status['Latitude'])
+                        this.current_lon.set(status['Longitude'])
+                        this.current_heading.set(status['Heading'])
                     info = heading.target_info( 
-                        ( this.current_lat.get(), this.current_lon.get()), 
+                        ( status['Latitude'], status['Longitude']), 
                         ( this.target['lat'], this.target['lon']),
-                        height = status['Altitude'], 
+                        height = status['Altitude'],
                         radius = this.target['radius'])
                     this.current_distance.set(info['distance'])
                     this.target_heading.set( info['heading'] )
@@ -127,9 +129,10 @@ def blank_data_fields():
     print("Blanking data fields")
     blank_field(this.target_lat)
     blank_field(this.target_lon)
-    blank_field(this.current_lat)
-    blank_field(this.current_lon)
-    blank_field(this.current_heading)
+    if this.display_hud_elements:
+        blank_field(this.current_lat)
+        blank_field(this.current_lon)
+        blank_field(this.current_heading)
     blank_field(this.current_distance)
     blank_field(this.target_heading)
     blank_field(this.target_attitude)
@@ -152,15 +155,17 @@ def plugin_app(parent):
     h.newrow()
 
     # Dynamic Current Location
-    tk.Label(this.status_frame, text="Current Lat").grid(row=h.row(), column = h.col(), sticky=tk.W)
-    this.current_lat = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.current_lat).grid(row=h.row(), column = h.col(), sticky=tk.W)
+    if this.display_hud_elements:
+        tk.Label(this.status_frame, text="Current Lat").grid(row=h.row(), column = h.col(), sticky=tk.W)
+        this.current_lat = tk.DoubleVar()
+        tk.Label(this.status_frame, textvariable=this.current_lat).grid(row=h.row(), column = h.col(), sticky=tk.W)
 
-    tk.Label(this.status_frame, text="Current Lon").grid(row=h.row(), column = h.col(), sticky=tk.W)
-    this.current_lon = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.current_lon).grid(row=h.row(), column = h.col())
+        tk.Label(this.status_frame, text="Current Lon").grid(row=h.row(), column = h.col(), sticky=tk.W)
+        this.current_lon = tk.DoubleVar()
+        tk.Label(this.status_frame, textvariable=this.current_lon).grid(row=h.row(), column = h.col())
 
-    h.newrow()
+        h.newrow()
+
     tk.Label(this.status_frame, text="Target Lat").grid(row=h.row(), column = h.col(), sticky=tk.W)
     this.target_lat = tk.DoubleVar()
     tk.Label(this.status_frame, textvariable=this.target_lat).grid(row=h.row(), column = h.col(), sticky=tk.W)
@@ -171,9 +176,10 @@ def plugin_app(parent):
 
     h.newrow()
     # Heading
-    tk.Label(this.status_frame, text="Current Heading").grid(row=h.row(), column=h.col(), sticky=tk.W)
-    this.current_heading = tk.DoubleVar()
-    tk.Label(this.status_frame, textvariable=this.current_heading).grid(row=h.row(), column=h.col(), sticky = tk.W)
+    if this.display_hud_elements:
+        tk.Label(this.status_frame, text="Current Heading").grid(row=h.row(), column=h.col(), sticky=tk.W)
+        this.current_heading = tk.DoubleVar()
+        tk.Label(this.status_frame, textvariable=this.current_heading).grid(row=h.row(), column=h.col(), sticky = tk.W)
     tk.Label(this.status_frame, text="Distance").grid(row=h.row(), column=h.col(), sticky=tk.W)
     this.current_distance = tk.DoubleVar()
     tk.Label(this.status_frame, textvariable=this.current_distance).grid(row=h.row(), column=h.col(), sticky = tk.W)

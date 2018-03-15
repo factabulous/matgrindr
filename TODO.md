@@ -19,4 +19,5 @@
 * Split action from state - when you LiftOff you have a Lat / lon but you need
 to be told where to go, no wait for a SCExit!
 * Locations on a planet need to be ordered by distance *if you are on planet*
- 
+* WHen settings are changed the destination should be recalculated 
+* Simplify output to remove most of the display
