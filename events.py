@@ -139,9 +139,9 @@ class EventEngine():
 
         params = self.make_params(entry, state)
         location_changed = False
-        system_ev = ['FSDJump', 'Location', 'StartUp']
-        body_ev = ['SupercruiseExit', 'Location', 'StartUp']
-        latlon_ev = ['Touchdown', 'Location', 'Liftoff', 'StartUp']
+        system_ev = ['FSDJump', 'Location', 'StartUp', 'LoadGame']
+        body_ev = ['SupercruiseExit', 'Location', 'StartUp', 'LoadGame']
+        latlon_ev = ['Touchdown', 'Location', 'Liftoff', 'StartUp', 'LoadGame']
 
         if self.is_event_with_params(params, system_ev + body_ev + latlon_ev, ['StarSystem', 'StarPos']):
             self._location.change_system(params['StarSystem'], params['StarPos'])
