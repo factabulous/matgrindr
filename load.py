@@ -57,9 +57,22 @@ def plugin_start():
 def plugin_stop():
     window.destroy()
 
-    if this.watcher:
-        this.watcher.stop()
-        this.watcher.join()
+
+def dashboard_entry(cmdr, is_beta, entry):
+    if 'Latitude' in entry and 'Longitude' in entry:
+        if hasattr(this, 'target'):
+            if this.display_hud_elements:
+                this.current_lat.set(entry['Latitude'])
+                this.current_lon.set(entry['Longitude'])
+                this.current_heading.set(entry['Heading'])
+            info = heading.target_info( 
+                ( entry['Latitude'], entry['Longitude']), 
+                ( this.target['lat'], this.target['lon']),
+                height = entry['Altitude'],
+                radius = this.target['radius'])
+            this.current_distance.set(info['distance'])
+            this.target_heading.set( info['heading'] )
+            this.target_attitude.set( info['descent_angle'])
 
 def update():
     try:
@@ -70,21 +83,6 @@ def update():
                 this.mats.reload(status['mats'])
             if 'error' in status:
                 print("Error: " + status['error'])
-	    if 'Latitude' in status and 'Longitude' in status:
-                print("New Lat Long update")
-                if hasattr(this, 'target'):
-                    if this.display_hud_elements:
-                        this.current_lat.set(status['Latitude'])
-                        this.current_lon.set(status['Longitude'])
-                        this.current_heading.set(status['Heading'])
-                    info = heading.target_info( 
-                        ( status['Latitude'], status['Longitude']), 
-                        ( this.target['lat'], this.target['lon']),
-                        height = status['Altitude'],
-                        radius = this.target['radius'])
-                    this.current_distance.set(info['distance'])
-                    this.target_heading.set( info['heading'] )
-                    this.target_attitude.set( info['descent_angle'])
                         
             this.status_frame.update_idletasks()
     except Queue.Empty:
@@ -208,12 +206,7 @@ def plugin_app(parent):
         status_loc = local_file("status.json")
     else:
         status_loc = os.path.realpath(os.path.join( config.default_journal_dir, "status.json"))
-
       
-    this.watcher = watcher.StatusWatcher(
-        status_loc,
-        this.status_queue)
-    this.watcher.start()
     parent.after(100, update)
     return this.status_frame
 
