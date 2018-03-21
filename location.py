@@ -27,6 +27,22 @@ class Location():
         self._is_dirty = True
         return self
 
+    def landed(self, is_landed = True):
+        """
+        Set whether we are landed somewhere
+        """
+        if self.is_landed() != is_landed:
+            self._loc['landed'] = is_landed
+            self._is_dirty = True
+
+    def is_landed(self):
+        """
+        Indicates whether we think we are landed
+        """
+        if 'landed' in self._loc:
+            return self._loc['landed']
+        return False
+
     def change_body(self, body):
         """
         Change the body within the sytem - latlon would be invalid, system

@@ -44,6 +44,14 @@ class LocationTest(unittest.TestCase):
         self.assertTrue(loc.has_body())
         self.assertFalse(loc.has_latlon())
 
+    def test_landing(self):
+        loc = location.Location()
+        self.assertFalse(loc.is_landed())
+        loc.landed()
+        self.assertTrue(loc.is_landed())
+        loc.landed(False)
+        self.assertFalse(loc.is_landed())
+
     def test_reset_system(self):
         loc = location.Location()
         loc.change_system("Sol", (1, 2, 3)).change_body("Earth").change_latlon(4, 5).change_system('Sirius', ( 6, 7, 8))
