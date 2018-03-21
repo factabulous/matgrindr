@@ -94,10 +94,12 @@ def plugin_prefs(parent, cmdr, is_beta):
     nb.Label(frame, text="Select materials you want").grid()
     this.settings = {}
     selected = config.get("matgrindr.selected") or []
+    c = 0
     for mat in this.mats.names():
         this.settings[mat] = tk.IntVar()
         this.settings[mat].set(1 if mat in selected else 0)
-        chk = nb.Checkbutton(frame, text=mat, variable=this.settings[mat]).grid(sticky=tk.W)
+        chk = nb.Checkbutton(frame, text=mat, variable=this.settings[mat]).grid(sticky=tk.W, row = 1 + c // 2, column = 1 + (c % 2))
+        c = c + 1
 
     return frame
 
