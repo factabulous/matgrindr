@@ -166,7 +166,7 @@ class EventEngine():
         Finds where we should be heading bass upon the current location state
         """
 
-        print("find_location - location is {}".format(self._location))
+        print("find_location - location is {}".format(self._location._loc))
 
         if self._location.is_landed():
             print("Landed")
