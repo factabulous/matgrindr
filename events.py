@@ -21,6 +21,13 @@ class EventEngine():
         self._visited = visited
         self._location = location.Location()
 
+    def change_requirements(self, requirements):
+        """
+        When the user changes what they want, use this to update the event
+        engine
+        """
+        self._requirements = requirements
+
     def keys_in(self, d, keys):
         """
         Returns True if all keys are in d

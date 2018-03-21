@@ -114,6 +114,7 @@ def prefs_changed(cmdr, is_beta):
         if this.settings[mat].get():
             res.append(mat)
     config.set("matgrindr.selected", res)
+    this.events.change_requirements(res)
 
     update_target(this.events.find_location())
 
