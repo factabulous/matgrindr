@@ -112,6 +112,8 @@ def prefs_changed(cmdr, is_beta):
             res.append(mat)
     config.set("matgrindr.selected", res)
 
+    update_target(this.events.find_location())
+
 def copy_system_to_clipboard(event):
    if this.target:
        window.clipboard_clear()  # clear clipboard contents
@@ -212,6 +214,12 @@ def plugin_app(parent):
 
 def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
+    update_target(res)
+
+def update_target(res)
+    """
+    Updates gui fields based on info passed back from the Events object
+    """
     if res:
         # The res is a tuple of action + target dict
         #plug.show_error("Retrieved " + str(len(res)))
