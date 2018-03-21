@@ -149,32 +149,43 @@ class EventEngine():
             self._location.change_body(params['ShortBody'])
         if self.is_event_with_params(params, latlon_ev, ['Latitude', 'Longitude']):
             self._location.change_latlon(params['Latitude'], params['Longitude'])
+        if params['event'] == 'Touchdown':
+            self._location.landed(True)
+        if params['event'] == 'Liftoff':
+            self._location.landed(False)
 
         location_changed = self._location.is_changed()
         if location_changed:
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
 
-            if params['event'] == 'Touchdown':
-                print("Touchdown")
-                target = self._materials.matches(self.location())
-                if target:
-                    print("Found a resource on planet")
-                    mats = set(target['materials']).intersection(self._requirements)
-                    self._visited.set_visited(target)
-                    return ("Collect "+",".join(mats),target, False)
+            return self.find_location()
 
-            if self._location.has_system():
-                distance, closest = self._materials.closest(self._location.pos(), self._requirements)
-                if self._location.has_body():
-                    # See if there is another location on this body
-                    local = self._materials.local(self._location.system(), self._location.body())
-                    if local:
-                        print("More mats on same body")
-                        return ("Travel to new coordinates", local[0], True)
-                if closest and same(closest['system'], self._location.system()):
-                    print("in correct system")
-                    return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest, True)
-                return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest, False)
+    def find_location(self):
+        """
+        Finds where we should be heading bass upon the current location state
+        """
+
+        if self._location.is_landed():
+            print("Landed")
+            target = self._materials.matches(self.location())
+            if target:
+                print("Found a resource on planet")
+                mats = set(target['materials']).intersection(self._requirements)
+                self._visited.set_visited(target)
+                return ("Collect "+",".join(mats),target, False)
+
+        if self._location.has_system():
+            distance, closest = self._materials.closest(self._location.pos(), self._requirements)
+            if self._location.has_body():
+                # See if there is another location on this body
+                local = self._materials.local(self._location.system(), self._location.body())
+                if local:
+                    print("More mats on same body")
+                    return ("Travel to new coordinates", local[0], True)
+            if closest and same(closest['system'], self._location.system()):
+                print("in correct system")
+                return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest, True)
+            return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest, False)
 
 
