@@ -17,8 +17,8 @@
 * Does not appear to mark locations as visited DONE TESTED
 * Work out when to blank lat / lon etc from gui and datastores DONE TEST
 * Split action from state - when you LiftOff you have a Lat / lon but you need
-to be told where to go, no wait for a SCExit! DONE TEST
+to be told where to go, no wait for a SCExit! DONE
 * Locations on a planet need to be ordered by distance *if you are on planet*
 * When settings are changed the destination should be recalculated 
-* Simplify output to remove most of the display DONE TEST
+* Simplify output to remove most of the display DONE 
 * Check if the dashboard method gives us the lat lon we want
