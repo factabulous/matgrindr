@@ -216,7 +216,7 @@ def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
     update_target(res)
 
-def update_target(res)
+def update_target(res):
     """
     Updates gui fields based on info passed back from the Events object
     """
