@@ -15,6 +15,26 @@ class VisitedTest(unittest.TestCase):
         self.assertTrue(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000))
         self.assertFalse(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000 + 7 * 24 * 3600))
 
+    def test_visited_recently_with_respawn(self):
+        """
+        Checks that the visited state is remembered and expires after time
+        """
+        v = visited.Visited()
+        v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0, 'respawn_days': 5 }, 
+                 when = 1000 )
+        self.assertTrue(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000))
+        self.assertFalse(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000 + 5 * 24 * 3600))
+
+    def test_visited_recently_with_no_respawn(self):
+        """
+        Checks that the visited state is remembered and we understand zero
+        periods
+        """
+        v = visited.Visited()
+        v.set_visited( { 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0, 'respawn_days': 0 }, 
+                 when = 1000 )
+        self.assertFalse(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000))
+
     def test_visited_case_sensitivity(self):
         """
         Checks that the store is not case sensitve
@@ -48,7 +68,6 @@ class VisitedTest(unittest.TestCase):
         self.assertTrue(v.is_visited({ 'system': 'Sol', 'body': 'Earth', 'lat': 0, 'lon': 0 }, when=1000))
         self.assertNotEqual('[]', v.save(when=1000))
         self.assertEqual('[]', v.save(when=1000 + 7 * 24 * 3600))
-
 
     def test_is_dirty(self):
         v = visited.Visited()

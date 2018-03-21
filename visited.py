@@ -21,20 +21,29 @@ class Visited():
        self._interval_secs = interval_days * 24 * 3600
        self._is_dirty = False
 
-    def expired(self, t, now):
+    def expired(self, t, now, period_secs = 24 * 7 * 3600 ):
         """
         Helper to say of time 't' is expired with respect to the 
         now time using the interval specified in the constructor
         """
 
         how_long = now - t
-        return how_long >= self._interval_secs
+        return how_long >= period_secs
 
     def unexpired(self, when=time.time()):
         """
         Returns all the unexpired sites we know of 
         """
-        return [ x for x in self._visited if not self.expired(x['at'], when)]
+        return [ x for x in self._visited if not self.expired(x['at'], when, period_secs = self.expiry_secs(x))]
+
+    def expiry_secs(self, entry):
+        """
+        Returns how many seconds before an entry expires
+        """
+        if 'respawn_days' in entry:
+            return 24 * 3600 * entry['respawn_days']
+        return self._interval_secs
+
 
     def save(self, when=time.time()):
         """
@@ -84,7 +93,7 @@ class Visited():
         """
         v = self.find(location)
         if v:
-            return False if self.expired(v['at'], when) else True
+            return False if self.expired(v['at'], when, period_secs = self.expiry_secs(v)) else True
         return False
 
     def is_dirty(self):
