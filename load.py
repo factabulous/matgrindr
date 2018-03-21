@@ -106,6 +106,7 @@ def prefs_changed(cmdr, is_beta):
     Called when the preferences have changes - updates the changes in
     permanent storage
     """
+    print("Prefs changed")
     res = []
     for mat in this.mats.names():
         if this.settings[mat].get():
@@ -220,6 +221,7 @@ def update_target(res):
     """
     Updates gui fields based on info passed back from the Events object
     """
+    print("update_target {}".format(res))
     if res:
         # The res is a tuple of action + target dict
         #plug.show_error("Retrieved " + str(len(res)))
