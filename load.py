@@ -157,6 +157,10 @@ def plugin_app(parent):
     this.clipboard.bind("<Button-1>", copy_system_to_clipboard)
 
     h.newrow()
+    tk.Label(this.status_frame, text="What").grid(row=h.row(), column = h.col(), sticky=tk.W)
+    this.type = tk.StringVar() 
+    tk.Label(this.status_frame, textvariable=this.type).grid(row=h.row(), column = h.col(3), columnspan=3, sticky=tk.W)
+    h.newrow()
 
     # Dynamic Current Location
     if this.display_hud_elements:
@@ -231,6 +235,7 @@ def update_target(res):
         this.action.set(res[0])
         if len(res) > 1:
             this.target = res[1]
+            this.type = this.target['type']
             if len(res) > 2:
                 show_latlon = res[2]
                 if show_latlon:
