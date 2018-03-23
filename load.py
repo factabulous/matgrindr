@@ -235,7 +235,7 @@ def update_target(res):
         this.action.set(res[0])
         if len(res) > 1:
             this.target = res[1]
-            this.type = this.target['type']
+            this.type.set(this.target['type'])
             if len(res) > 2:
                 show_latlon = res[2]
                 if show_latlon:
