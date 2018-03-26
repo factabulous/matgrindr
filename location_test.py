@@ -8,6 +8,7 @@ class LocationTest(unittest.TestCase):
     def test_change_system(self):
         loc = location.Location()
         loc.change_system("Sol", (1, 2, 3))
+        self.assertTrue(loc.is_changed())
         self.assertTrue(loc.has_system())
         self.assertFalse(loc.has_body())
         self.assertFalse(loc.has_latlon())
@@ -21,6 +22,7 @@ class LocationTest(unittest.TestCase):
         loc = location.Location()
         loc.change_system("Sol", (1, 2, 3))
         loc.change_body("Earth")
+        self.assertTrue(loc.is_changed())
         self.assertTrue(loc.has_system())
         self.assertTrue(loc.has_body())
         self.assertFalse(loc.has_latlon())
@@ -58,6 +60,18 @@ class LocationTest(unittest.TestCase):
         self.assertTrue(loc.has_system())
         self.assertFalse(loc.has_body())
         self.assertFalse(loc.has_latlon())
+
+    def test_dirty_flag(self):
+        loc = location.Location()
+        loc.change_system("Sol", (1, 2, 3))
+        self.assertTrue(loc.is_changed())
+        loc.get() # Should reset dirty flag
+        self.assertFalse(loc.is_changed())
+        loc.change_system("Sol", (1, 2, 3))
+        # Still not dirty - is same system
+        self.assertFalse(loc.is_changed())
+        loc.change_system("Arcturus", (1, 2, 5))
+        self.assertTrue(loc.is_changed())
 
 if __name__ == "__main__":
      unittest.main()

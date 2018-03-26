@@ -15,16 +15,17 @@ class Location():
         """
         Location switches systems(s). The body and latlon are invalidated.
         """
-        self._loc['system'] = system
-        self._loc['x'] = pos[0]
-        self._loc['y'] = pos[1]
-        self._loc['z'] = pos[2]
-        if 'body' in self._loc:
-            del self._loc['body']
-        if 'lat' in self._loc:
-            del self._loc['lat']
-            del self._loc['lon']
-        self._is_dirty = True
+        if 'system' not in self._loc or self._loc['system'] != system:
+            self._loc['system'] = system
+            self._loc['x'] = pos[0]
+            self._loc['y'] = pos[1]
+            self._loc['z'] = pos[2]
+            if 'body' in self._loc:
+                del self._loc['body']
+            if 'lat' in self._loc:
+                del self._loc['lat']
+                del self._loc['lon']
+            self._is_dirty = True
         return self
 
     def landed(self, is_landed = True):
@@ -48,11 +49,12 @@ class Location():
         Change the body within the sytem - latlon would be invalid, system
         is retained
         """
-        self._loc['body'] = body
-        if 'lat' in self._loc:
-            del self._loc['lat']
-            del self._loc['lon']
-        self._is_dirty = True
+        if 'body' not in self._loc or self._loc['body'] != body:
+            self._loc['body'] = body
+            if 'lat' in self._loc:
+                del self._loc['lat']
+                del self._loc['lon']
+            self._is_dirty = True
         return self
 
     def change_latlon(self, lat, lon):
