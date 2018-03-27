@@ -30,7 +30,7 @@ class Version():
             on_github = requests.get("https://raw.githubusercontent.com/factabulous/matgrindr/master/VERSION.md").text.strip()
             config.set(self._last_check_key, str(now))
 
-            with open(local_file("VERSION.md"), "rt") as current_version_file:
+            with open(self.local_file("VERSION.md"), "rt") as current_version_file:
                 current_version = current_version_file.read().strip()
 
                 return current_version != on_github
