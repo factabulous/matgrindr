@@ -4,6 +4,7 @@ from config import config
 import time
 import os
 import sys
+import requests
 
 class Version():
     """
