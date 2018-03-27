@@ -48,9 +48,12 @@ class MatsLoaderRemote(threading.Thread):
         self.filename = filename
         self.queue = queue
         self.daemon = True
-        self.integerRe = re.compile(r"^-?\d+$")
-        self.floatRe = re.compile(r"^-?\d+(\.\d+)?$")
-        self.arrayRe = re.compile(r"^\[.*\]$")
+        self.integerRe = re.compile(r'^-?\d+$')
+        self.floatRe = re.compile(r'^-?\d+(\.\d+)?$')
+        self.arrayRe = re.compile(r'^\[.*\]$')
+
+    def array_splitter(self, value):
+        return [ x[1:-1] for x in value[1:-1].split(", ") ]
 
     def detect(self, value):
         """
@@ -61,6 +64,8 @@ class MatsLoaderRemote(threading.Thread):
             return int(value)
         elif self.floatRe.match(value):
             return float(value)
+        elif self.arrayRe.match(value):
+            return self.array_splitter(value)
         else:
             return value
 

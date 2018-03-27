@@ -19,8 +19,9 @@ class WatcherTest(unittest.TestCase):
         self.assertEqual(-12, m.detect("-12"))
         self.assertEqual(12.89, m.detect("12.89"))
         self.assertEqual("12.A89", m.detect("12.A89"))
+        self.assertEqual(["12", "89"], m.detect(r"['12', '89']"))
 
-    def _test_watcher_parses_ints(self):
+    def test_watcher_parses_ints(self):
         """
         Tests that values that can be integers are parsed as such 
         """
