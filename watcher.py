@@ -86,7 +86,7 @@ class MatsLoaderRemote(threading.Thread):
         into an array of dicts. Mainly split out so we can test
         """
 
-        lines = text.split("\n")
+        lines = text.replace("\r", "").split("\n")
         fields = lines[0].split("\t")
         res = []
         for entry in lines[1:]:

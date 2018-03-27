@@ -10,7 +10,7 @@ class WatcherTest(unittest.TestCase):
         a CSV and can populate a hash
         """
         m = watcher.MatsLoaderRemote("file", None)
-        res = m.parse("A\tB\nJim\tBob\nBill\tJames\n")
+        res = m.parse("A\tB\r\nJim\tBob\r\nBill\tJames\r\n")
         self.assertEqual([ { "A": "Jim", "B": "Bob" }, { "A": "Bill", "B": "James" }], res)
 
     def test_detect(self):
@@ -26,7 +26,7 @@ class WatcherTest(unittest.TestCase):
         Tests that values that can be integers are parsed as such 
         """
         m = watcher.MatsLoaderRemote("file", None)
-        res = m.parse("A\tB\n1\t2\n3\t4\n")
+        res = m.parse("A\tB\r\n1\t2\r\n3\t4\r\n")
         self.assertEqual([ { "A": 1, "B": 2 }, { "A": 3, "B": 4 }], res)
 
     def test_watcher_parser_file(self):
@@ -42,9 +42,6 @@ class WatcherTest(unittest.TestCase):
                 self.assertIn('system', v)
                 self.assertIn('body', v)
                 self.assertIn('materials', v)
-            
-    
-
 
 
 if __name__ == "__main__":
