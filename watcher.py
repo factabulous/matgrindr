@@ -95,11 +95,14 @@ class MatsLoaderRemote(threading.Thread):
                
                 res = self.parse(r.text)
 
-                with open(self.filename, "wt") as cache_file:
-                    json.dump(res, cache_file)
-                 
-                self.queue.put( { 'mats': res } )
-                debug("Async remote mats loader from csv is completed")
+                if res:
+                    with open(self.filename, "wt") as cache_file:
+                        json.dump(res, cache_file)
+                     
+                    self.queue.put( { 'mats': res } )
+                    debug("Async remote mats loader from tsv is completed {} entries".format(len(res)))
+                else:
+                    debug("Async remote mats loader failed - zero records")
         except:
             self.queue.put( { 'error': 'Failed to load csv materials ' + str(sys.exc_info()[0]) } )
 

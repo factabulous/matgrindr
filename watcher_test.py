@@ -29,6 +29,22 @@ class WatcherTest(unittest.TestCase):
         res = m.parse("A\tB\n1\t2\n3\t4\n")
         self.assertEqual([ { "A": 1, "B": 2 }, { "A": 3, "B": 4 }], res)
 
+    def test_watcher_parser_file(self):
+        m = watcher.MatsLoaderRemote("file", None)
+        with open("test.tsv", "rt") as test_file:
+            res = m.parse(test_file.read())
+            self.assertEqual(714, len(res))
+            for v in res:
+                self.assertIn('type', v)
+                self.assertIn('action', v)
+                self.assertIn('lat', v)
+                self.assertIn('lon', v)
+                self.assertIn('system', v)
+                self.assertIn('body', v)
+                self.assertIn('materials', v)
+            
+    
+
 
 
 if __name__ == "__main__":
