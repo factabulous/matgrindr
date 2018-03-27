@@ -14,15 +14,16 @@ import plug
 import heading
 import version
 from sys import platform
-from util import GridHelper
+from util import GridHelper, debug
 
 this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 this.display_hud_elements = False
 
-this.debug = True if platform == 'darwin' else False
+#this.debug = True if platform == 'darwin' else False
 this.NO_VALUE = "---" # Used when we don't have a value for a field
+this.debug_buttons = False # Set True to display buttons for debugging
 
 window=tk.Tk()
 window.withdraw()
@@ -80,10 +81,10 @@ def update():
         while True:
             status = this.status_queue.get_nowait()
             if 'mats' in status:
-                print("Mats reload requested")
+                debug("Mats reload requested")
                 this.mats.reload(status['mats'])
             if 'error' in status:
-                print("Error: " + status['error'])
+                debug("Error: " + status['error'])
                         
             this.status_frame.update_idletasks()
     except Queue.Empty:
@@ -109,7 +110,7 @@ def prefs_changed(cmdr, is_beta):
     Called when the preferences have changes - updates the changes in
     permanent storage
     """
-    print("Prefs changed")
+    debug("Prefs changed")
     res = []
     for mat in this.mats.names():
         if this.settings[mat].get():
@@ -131,7 +132,7 @@ def blank_field(value):
     value.set( this.NO_VALUE )
 
 def blank_data_fields():
-    print("Blanking data fields")
+    debug("Blanking data fields")
     blank_field(this.target_lat)
     blank_field(this.target_lon)
     if this.display_hud_elements:
@@ -206,7 +207,7 @@ def plugin_app(parent):
     this.target_attitude = tk.StringVar()
     tk.Label(this.status_frame, textvariable=this.target_attitude).grid(row=h.row(), column=h.col(), sticky=tk.W)
     blank_data_fields()
-    if this.debug:
+    if this.debug_buttons:
         h.newrow()
         tk.Button(this.status_frame, text="FSDJump Sol", command=dbgFsdSol).grid(row=h.row(), column = h.col(), sticky=tk.W)
         tk.Button(this.status_frame, text="FSDJump Colonia", command=dbgFsdColonia).grid(row=h.row(), column = h.col(), sticky=tk.W)
@@ -233,7 +234,7 @@ def update_target(res):
     """
     Updates gui fields based on info passed back from the Events object
     """
-    print("update_target {}".format(res))
+    debug("update_target {}".format(res))
     if res:
         # The res is a tuple of action + target dict
         #plug.show_error("Retrieved " + str(len(res)))

@@ -3,6 +3,7 @@
 import json
 import math
 import time
+from util import debug
 from util import same
 
 class Visited():
@@ -55,7 +56,7 @@ class Visited():
         assumes that the save is successful, and the store is no longer dirty
         """
         self._is_dirty = False
-        print("Saving the visited() list - entries" + str(len(self.unexpired(when))))
+        debug("Saving the visited() list - entries" + str(len(self.unexpired(when))))
         return json.dumps(self.unexpired(when))
 
     def find(self, location):
@@ -76,12 +77,12 @@ class Visited():
         v = self.find(location)
         if v:
             v['at'] = when
-            print("Setting previously site to 'visited' again")
+            debug("Setting previously site to 'visited' again")
         else:
             location = location.copy()
             location['at'] = when
             self._visited.append(location)
-            print("Adding site to 'visited' list")
+            debug("Adding site to 'visited' list")
         self._is_dirty = True
 
     def is_visited(self, location, when=time.time()):
@@ -102,6 +103,6 @@ class Visited():
         expired entries do not count towards dirty state - they are left xu
         until a new entry is written, and will be removed then
         """
-        print("Asked if the visited() set is dirty: " + str(self._is_dirty))
+        debug("Asked if the visited() set is dirty: " + str(self._is_dirty))
         return self._is_dirty
 

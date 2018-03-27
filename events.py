@@ -3,6 +3,7 @@
 import sys
 from util import same
 import location
+from util import debug
 
 class EventEngine():
     """
@@ -48,9 +49,9 @@ class EventEngine():
             return "Yes" if key in store else "No"
         
         fmt = "{:10s} {:>10s} {:>10s}"
-        print(fmt.format("key", "event", "state"))
+        debug(fmt.format("key", "event", "state"))
         for k in keys:
-            print(fmt.format(k, rep_key(event, k), rep_key(state, k)))
+            debug(fmt.format(k, rep_key(event, k), rep_key(state, k)))
                
         
     def event_in(self, d, keys):
@@ -142,7 +143,7 @@ class EventEngine():
             SupercruiseExit
         """
 
-        print("[matgrindr] Event {}".format(entry['event']))
+        debug("[matgrindr] Event {}".format(entry['event']))
 
         params = self.make_params(entry, state)
         location_changed = False
@@ -173,13 +174,13 @@ class EventEngine():
         Finds where we should be heading bass upon the current location state
         """
 
-        print("find_location - location is {}".format(self._location._loc))
+        debug("find_location - location is {}".format(self._location._loc))
 
         if self._location.is_landed():
-            print("Landed")
+            debug("Landed")
             target = self._materials.matches(self.location())
             if target:
-                print("Found a resource on planet")
+                debug("Found a resource on planet")
                 mats = set(target['materials']).intersection(self._requirements)
                 self._visited.set_visited(target)
                 return ("Collect "+",".join(mats),target, False)
@@ -190,10 +191,10 @@ class EventEngine():
                 # See if there is another location on this body
                 local = self._materials.local(self._location.system(), self._location.body())
                 if local:
-                    print("More mats on same body")
+                    debug("More mats on same body")
                     return ("Travel to new coordinates", local[0], True)
             if closest and same(closest['system'], self._location.system()):
-                print("in correct system")
+                debug("in correct system")
                 return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest, True)
             return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest, False)
 
