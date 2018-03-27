@@ -52,6 +52,17 @@ class MatsLoaderRemote(threading.Thread):
         self.floatRe = re.compile(r'^-?\d+(\.\d+)?$')
         self.arrayRe = re.compile(r'^\[.*\]$')
 
+    def need_refresh(self):
+        """
+        Returns True if the local cache needs a refresh. 
+        """
+        if not os.path.exists(self.filename):
+            return True
+
+        mtime = os,path.getmtime(self.filename)
+        now = time.time()
+        return mtime < now - 24 * 3600 # Daily update
+
     def array_splitter(self, value):
         return [ x[1:-1] for x in value[1:-1].split(", ") ]
 
@@ -90,7 +101,7 @@ class MatsLoaderRemote(threading.Thread):
 
     def run(self):
         try:
-            if True or not os.path.exists(self.filename):
+            if self.need_refresh():
                 r = requests.get("https://docs.google.com/spreadsheets/u/0/d/1g0y7inyvQopJ93jP5YIu3n0veX0ng8DraJXAvZk6pS4/export?format=tsv&id=1g0y7inyvQopJ93jP5YIu3n0veX0ng8DraJXAvZk6pS4&gid=0")
                
                 res = self.parse(r.text)

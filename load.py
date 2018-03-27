@@ -48,7 +48,7 @@ def local_file(name):
     return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
 def plugin_start():
-    watcher.MatsLoader( local_file("mats.json"), this.status_queue).start()
+    watcher.MatsLoaderRemote( local_file("mats-cache.json"), this.status_queue).start()
     this.visited = visited.Visited( config.get("matgrindr.visited")) 
     this.mats = mats.Materials(None, this.visited)
     selected = config.get("matgrindr.selected") or []
