@@ -28,7 +28,6 @@ class MatsLoader(threading.Thread):
         try:
             m = mats.Materials(self.filename)
             self.queue.put( { 'mats': m._materials } )
-            debug("Async mats loader is completed")
         except:
             self.queue.put( { 'error': 'Failed to load materials ' + str(sys.exc_info()[0]) } )
 
@@ -55,11 +54,13 @@ class MatsLoaderRemote(threading.Thread):
         into an array of dicts. Mainly split out so we can test
         """
 
-        lines = r.text.split("\n")
+        lines = text.split("\n")
         fields = lines[0].split("\t")
         res = []
         for entry in lines[1:]:
             values = entry.split("\t")
+            if len(values) < len(fields):
+                continue
             v = {}
             for k in range(0, len(fields)):
                 v[fields[k]] = values[k]
@@ -71,8 +72,6 @@ class MatsLoaderRemote(threading.Thread):
             if True or not os.path.exists(self.filename):
                 r = requests.get("https://docs.google.com/spreadsheets/u/0/d/1g0y7inyvQopJ93jP5YIu3n0veX0ng8DraJXAvZk6pS4/export?format=tsv&id=1g0y7inyvQopJ93jP5YIu3n0veX0ng8DraJXAvZk6pS4&gid=0")
                
-                lines = r.text.split("\n")
-                fields = lines[0].split("\t")
                 res = self.parse(r.text)
 
                 with open(self.filename, "wt") as cache_file:
