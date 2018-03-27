@@ -14,5 +14,8 @@
 * Split action from state - when you LiftOff you have a Lat / lon but you need
 to be told where to go, no wait for a SCExit! DONE
 * Locations on a planet need to be ordered by distance *if you are on planet*
-* When settings are changed the destination should be recalculated 
-* Check if the dashboard method gives us the lat lon we want
+* When settings are changed the destination should be recalculated DONE 
+* Check if the dashboard method gives us the lat lon we want DONE
+* Load mats from a google spreadie
+* Upload Mats automatically to a google spreadie
+* Don't include inactive TS as TL sources
