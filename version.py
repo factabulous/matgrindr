@@ -19,7 +19,7 @@ class Version():
         return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
 
     def is_new_version(self):
-        last_check = float(config.get(self._last_check_key))
+        last_check = float(config.get(self._last_check_key) or "0")
         now = time.time()
         # Only check every 24 hours
         if now < last_check + 24 * 3600:
