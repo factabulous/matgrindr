@@ -7,6 +7,7 @@ import time
 import mats
 import sys
 import requests
+import re
 from util import debug
 
 class MatsLoader(threading.Thread):
@@ -47,6 +48,21 @@ class MatsLoaderRemote(threading.Thread):
         self.filename = filename
         self.queue = queue
         self.daemon = True
+        self.integerRe = re.compile(r"^-?\d+$")
+        self.floatRe = re.compile(r"^-?\d+(\.\d+)?$")
+        self.arrayRe = re.compile(r"^\[.*\]$")
+
+    def detect(self, value):
+        """
+        Looks at a data value and converts into an appropriate type
+        (maybe should look at using ast instead)
+        """
+        if self.integerRe.match(value):
+            return int(value)
+        elif self.floatRe.match(value):
+            return float(value)
+        else:
+            return value
 
     def parse(self, text):
         """
@@ -63,7 +79,7 @@ class MatsLoaderRemote(threading.Thread):
                 continue
             v = {}
             for k in range(0, len(fields)):
-                v[fields[k]] = values[k]
+                v[fields[k]] = self.detect(values[k])
             res.append(v)
         return res
 
