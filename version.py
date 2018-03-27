@@ -3,6 +3,7 @@
 from config import config
 import time
 import os
+import sys
 
 class Version():
     """
@@ -33,5 +34,5 @@ class Version():
 
                 return current_version != on_github
         except:
-            print("[matgrindr] Exception reading version files")
+            print("[matgrindr] Exception reading version files" + sys.exc_info()[0])
         return False
