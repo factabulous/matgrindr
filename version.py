@@ -34,5 +34,5 @@ class Version():
 
                 return current_version != on_github
         except:
-            print("[matgrindr] Exception reading version files" + sys.exc_info()[0])
+            print("[matgrindr] Exception reading version files" + str(sys.exc_info()[0]))
         return False
