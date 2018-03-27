@@ -9,3 +9,5 @@
 * Load mats from a google spreadie DONE TEST
 * Upload Mats automatically to a google spreadie DONE TEST
 * Don't include inactive TS as TL sources
+* Filter out invalid BT sites
+* Add in a types filter - maybe
