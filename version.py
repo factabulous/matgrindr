@@ -5,6 +5,7 @@ import time
 import os
 import sys
 import requests
+import util
 
 class Version():
     """
@@ -16,10 +17,6 @@ class Version():
         self._config_prefix = config_prefix
         self._last_check_key = config_prefix + ".last_vcheck"
 
-    def local_file(name):
-        # TODO: This is a duplicate from load.py
-        return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
-
     def is_new_version(self):
         last_check = float(config.get(self._last_check_key) or "0")
         now = time.time()
@@ -28,12 +25,16 @@ class Version():
             return False
         try:
             on_github = requests.get("https://raw.githubusercontent.com/factabulous/matgrindr/master/VERSION.md").text.strip()
+            util.debug("Github version {}".format(on_github))
             config.set(self._last_check_key, str(now))
 
-            with open(self.local_file("VERSION.md"), "rt") as current_version_file:
-                current_version = current_version_file.read().strip()
+            with open(util.local_file("VERSION.md"), "rt") as current_version_file:
+                installed_version = current_version_file.read().strip()
+                util.debug("Local version {}".format(installed_version))
 
-                return current_version != on_github
+                different =  installed_version != on_github
+                util.debug("Versions different?: {}".format( different ))
+                return different
         except:
-            print("[matgrindr] Exception reading version files" + str(sys.exc_info()[0]))
+            util.debug("[matgrindr] Exception reading version files" + str(sys.exc_info()[0]))
         return False

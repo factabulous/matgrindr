@@ -1,5 +1,20 @@
 # -*- coding: utf-8 -*-
 
+import os
+
+def debug(str):
+    """
+    Output debug information to the EDMC logfile - prepends the 
+    plugin name
+    """
+    print('[matgrindr] ' + str)
+
+def local_file(name):
+    """
+    Returns the full path to a filenam inside the plugin area
+    """
+    return os.path.join(os.path.dirname(os.path.realpath(__file__)), name)
+
 def same(left, right):
     """
     Used for testing that thing link system names are the same (they 
