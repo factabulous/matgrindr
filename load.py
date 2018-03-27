@@ -153,8 +153,8 @@ def plugin_app(parent):
     # Current Action being recommended 
     this.action = tk.StringVar() 
 
-    version = version.Version("matgrindr")
-    if version.is_new_version():
+    vcheck = version.Version("matgrindr")
+    if vcheck.is_new_version():
         this.action.set("New version of matgrindr available!")
     tk.Label(this.status_frame, textvariable=this.action).grid(row=h.row(), column = h.col(3), columnspan=3, sticky=tk.W)
     this.clipboard = tk.Label(this.status_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
