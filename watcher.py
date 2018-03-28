@@ -7,6 +7,7 @@ import time
 import mats
 import sys
 import requests
+import traceback
 import re
 from util import debug
 
@@ -115,5 +116,5 @@ class MatsLoaderRemote(threading.Thread):
                 else:
                     debug("Async remote mats loader failed - zero records")
         except:
-            self.queue.put( { 'error': 'Failed to load csv materials ' + str(sys.exc_info()[0]) } )
+            self.queue.put( { 'error': 'Failed to load tsv materials ' + str(sys.exc_info()[0]) + ' ' + traceback.format_exc() } )
 
