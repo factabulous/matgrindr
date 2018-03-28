@@ -97,6 +97,7 @@ def plugin_prefs(parent, cmdr, is_beta):
     this.settings = {}
     selected = config.get("matgrindr.selected") or []
     c = 0
+    debug("Mats: " + this.mats.names())
     for mat in this.mats.names():
         this.settings[mat] = tk.IntVar()
         this.settings[mat].set(1 if mat in selected else 0)
