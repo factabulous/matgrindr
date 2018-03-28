@@ -60,7 +60,7 @@ class MatsLoaderRemote(threading.Thread):
         if not os.path.exists(self.filename):
             return True
 
-        mtime = os,path.getmtime(self.filename)
+        mtime = os.path.getmtime(self.filename)
         now = time.time()
         return mtime < now - 24 * 3600 # Daily update
 
