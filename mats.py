@@ -17,7 +17,7 @@ class Materials():
         Loads a new set of mats - used for async updates, though not 
         threadsafe so needs to be called on main GUI thread
         """
-        self._materials = mats.copy()
+        self._materials = mats
 
     def names(self):
         """
