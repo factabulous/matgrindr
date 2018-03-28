@@ -17,13 +17,14 @@ class Materials():
         Loads a new set of mats - used for async updates, though not 
         threadsafe so needs to be called on main GUI thread
         """
-        self._materials = mats
+        self._materials = mats.copy()
 
     def names(self):
         """
         Return the set of all materials we can find
         """
         res = set()
+        
         for loc in self._materials:
             res.update(loc['materials'])
         return sorted(res)

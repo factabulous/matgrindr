@@ -115,6 +115,12 @@ class MatsLoaderRemote(threading.Thread):
                     debug("Async remote mats loader from tsv is completed {} entries".format(len(res)))
                 else:
                     debug("Async remote mats loader failed - zero records")
+            else:
+                with open(self.filename, "rt") as cache_file:
+                    res = json.load(cache_file)
+                    self.queue.put( { 'mats': res } )
+                    debug("loader from cache is completed {} entries".format(len(res)))
+
         except:
             self.queue.put( { 'error': 'Failed to load tsv materials ' + str(sys.exc_info()[0]) + ' ' + traceback.format_exc() } )
 
