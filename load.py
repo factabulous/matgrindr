@@ -15,6 +15,7 @@ import heading
 import version
 from sys import platform
 from util import GridHelper, debug
+from ttkHyperlinkLabel import HyperlinkLabel
 
 this = sys.modules[__name__]	# For holding module globals
 
@@ -151,13 +152,14 @@ def plugin_app(parent):
     """
     h = GridHelper()
     this.status_frame = tk.Frame(parent)
- 
-    # Current Action being recommended 
-    this.action = tk.StringVar() 
 
     vcheck = version.Version("matgrindr")
     if vcheck.is_new_version():
-        this.action.set("New version of matgrindr available!")
+        HyperlinkLabel(this.status_frame, url="https://github.com/factabulous/matgrindr", text="New matgrindr version available!").grid(row=h.row, column=h.col)
+        h.newrow()
+
+    # Current Action being recommended 
+    this.action = tk.StringVar() 
     tk.Label(this.status_frame, textvariable=this.action).grid(row=h.row(), column = h.col(3), columnspan=3, sticky=tk.W)
     this.clipboard = tk.Label(this.status_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
     this.clipboard.grid(row=h.row(), column=h.col())
@@ -218,12 +220,6 @@ def plugin_app(parent):
         h.newrow()
         tk.Button(this.status_frame, text="Touchdown In", command=dbgTouchdownIn).grid(row=h.row(), column =h.col(), sticky=tk.W)
 
-    # TODO : Not the right value for Darwin - right value for testing
-    if platform == "darwin":
-        status_loc = local_file("status.json")
-    else:
-        status_loc = os.path.realpath(os.path.join( config.default_journal_dir, "status.json"))
-      
     parent.after(100, update)
     return this.status_frame
 
