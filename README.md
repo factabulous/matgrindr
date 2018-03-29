@@ -13,10 +13,10 @@ At the moment it can guide you to:
 * Thargoid Links (at Thargoid Structures) 
 * Raw materials at Brain Tree sites.
 
-Note that the data in not ideal at the moemnt - it includes Thargoid Structures
+Note that the data is not ideal at the moment - it includes Thargoid Structures
 that are inactive, and Brain Tree sites that have been invalidated (though
 there are few of these). The list is updated daily, it is downloaded from 
-a google doc daily so will improve over time. 
+a google doc so will improve over time. 
 
 Prerequistes
 ----
@@ -27,7 +27,7 @@ Installation
 ----
 
 Unzip the plugin into EDMCs plugins directory. It appears as a plugin called
-matgrindr-release - there is a settings page to set what you need, and the 
+matgrindr-master - there is a settings page to set what you need, and the 
 status should show on the main EDMC page. 
 
 Usage
