@@ -155,7 +155,7 @@ def plugin_app(parent):
 
     vcheck = version.Version("matgrindr")
     if vcheck.is_new_version():
-        HyperlinkLabel(this.status_frame, url="https://github.com/factabulous/matgrindr", text="New matgrindr version available!").grid(row=h.row, column=h.col)
+        HyperlinkLabel(this.status_frame, url="https://github.com/factabulous/matgrindr", text="New matgrindr version available! Click here").grid(row=h.row, column=h.col(4), columnspan=4)
         h.newrow()
 
     # Current Action being recommended 
