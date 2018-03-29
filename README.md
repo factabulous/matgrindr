@@ -59,3 +59,8 @@ however can be revisited / reharvested immediatley, so these will immediately
 direct you back to the planet, it is suggested that you de-select these items
 after you have harvested them.
 
+Third Parties
+-----
+
+Icons provided by Iconic https://useiconic.com/open
+
