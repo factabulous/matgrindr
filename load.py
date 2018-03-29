@@ -54,8 +54,8 @@ def plugin_start():
     this.mats = mats.Materials(None, this.visited)
     selected = config.get("matgrindr.selected") or []
     this.events = events.EventEngine(this.mats, selected, this.visited)
-    this._IMG_CLIPBOARD = tk.PhotoImage(file = local_file('clipboard-2x.png'))
-    this._IMG_SKIP = tkPhotoImage(file = local_file('circle-x-2x.png'))
+    this._IMG_CLIPBOARD = tk.PhotoImage(file = local_file('clipboard-2x.gif'))
+    this._IMG_SKIP = tk.PhotoImage(file = local_file('circle-x-2x.gif'))
     return "Matgrindr"
 
 def plugin_stop():
@@ -176,10 +176,13 @@ def plugin_app(parent):
     tk.Label(this.status_frame, textvariable=this.action).grid(row=h.row(), column = h.col(3), columnspan=3, sticky=tk.W)
 
     # Put the icons in the same grid pos in their own frame
-    icon_frame = tk.Frame(this.status_frame).grid(row=h.row(), column = h.col())
+    icon_frame = tk.Frame(this.status_frame);
+    icon_frame.grid(row=h.row(), column = h.col())
     this.clipboard = tk.Label(icon_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
     this.skip = tk.Label(icon_frame, anchor=tk.W, image=this._IMG_SKIP)
-    this.clipboard.grid(row=h.row(), column=h.col())
+    #this.clipboard.grid(row=h.row(), column=h.col())
+    this.clipboard.pack(side=tk.LEFT)
+    this.skip.pack(side=tk.LEFT)
     this.clipboard.bind("<Button-1>", copy_system_to_clipboard)
 
     h.newrow()
