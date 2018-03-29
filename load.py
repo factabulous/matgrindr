@@ -91,11 +91,20 @@ def update():
         pass
     this.status_frame.after(100, update)
 
+def select_all():
+    for m in this.settings:
+        this.settings[m].set(1)
+
+def select_none():
+    for m in this.settings:
+        this.settings[m].set(0)
+
 def plugin_prefs(parent, cmdr, is_beta):
     frame = nb.Frame(parent)
     nb.Label(frame, text="Select materials you want").grid(row = 0, column = 0)
     this.settings = {}
     selected = config.get("matgrindr.selected") or []
+
     c = 0
     debug("Mats: " + str(this.mats.names()))
     for mat in this.mats.names():
@@ -104,6 +113,9 @@ def plugin_prefs(parent, cmdr, is_beta):
         chk = nb.Checkbutton(frame, text=mat, variable=this.settings[mat]).grid(sticky=tk.W, row = 1 + c // 2, column = c % 2)
         c = c + 1
 
+    c = c + 2
+    nb.Button(frame, text="Select All", command=select_all).grid(sticky=tk.W, row=c //2, column = 0)
+    nb.Button(frame, text="Select None", command=select_none).grid(sticky=tk.W, row=c //2, column = 1)
     return frame
 
 def prefs_changed(cmdr, is_beta):
