@@ -196,6 +196,7 @@ class EventEngine():
             if closest and same(closest['system'], self._location.system()):
                 debug("in correct system")
                 return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest, True)
-            return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest, False)
+            if closest:
+                return ("Go to {} ({:1.0f} Ly)".format(closest['system'], distance), closest, False)
 
 
