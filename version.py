@@ -36,5 +36,5 @@ class Version():
                 util.debug("Versions different?: {}".format( different ))
                 return different
         except:
-            util.debug("[matgrindr] Exception reading version files" + str(sys.exc_info()[0]))
+            util.error("[matgrindr] Exception reading version files" + str(sys.exc_info()[0]))
         return False

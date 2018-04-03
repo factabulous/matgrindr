@@ -2,12 +2,20 @@
 
 import os
 
+def error(str):
+    """
+    Output error information to the EDMC logfile - prepends the 
+    plugin name
+    """
+    print('[matgrindr] ' + str)
+
 def debug(str):
     """
     Output debug information to the EDMC logfile - prepends the 
     plugin name
     """
-    print('[matgrindr] ' + str)
+    if False:
+        print('[matgrindr] ' + str)
 
 def local_file(name):
     """
