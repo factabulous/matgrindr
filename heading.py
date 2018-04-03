@@ -28,8 +28,7 @@ def great_circle(start, end, radius):
 def angle_of_descent(start, end, height, radius):
     """
     Works out the angle of descent needed to hit zero height at the 
-    given end point. We only ask for descent when the angle is more then
-    30 degrees
+    given end point. 
 
     Note height : metres
          radius : kilometers
@@ -38,8 +37,6 @@ def angle_of_descent(start, end, height, radius):
     angle = atan2(-height / 1000, horz_distance)
     angle = -int(round(degrees(angle)))
     #debug("angle_of_descent(h={}, v={}, a={})".format(horz_distance, height, angle))
-    if angle < 30:
-        return 0
     return angle
 
 def target_info(now, goal, height, radius):
@@ -47,8 +44,10 @@ def target_info(now, goal, height, radius):
     Returns a dict with (heading, distance, descent_angle) to make
     it easier to gather this information
     """
+    descent_angle = angle_of_descent(now, goal, height, radius)
     return { 
         "heading": heading(now, goal),
         "distance": great_circle(now, goal, radius),
-        "descent_angle": angle_of_descent(now, goal, height, radius)
+        "descent_angle": descent_angle,
+        "descent_ok": 35 < descent_angle < 55
     }

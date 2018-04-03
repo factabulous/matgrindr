@@ -24,13 +24,13 @@ class HeadingTest(unittest.TestCase):
         """
         self.assertEqual(45, heading.angle_of_descent((0,0), (0,10), radius=500, height=87000))
         self.assertEqual(63, heading.angle_of_descent((0,0), (0,10), radius=500, height=174000))
-        # Make sure we have a cut-off at 30 degrees
         self.assertEqual(30, heading.angle_of_descent((0,0), (0,10), radius=500, height=50000))
-        self.assertEqual(0, heading.angle_of_descent((0,0), (0,10), radius=500, height=49000))
+        self.assertEqual(29, heading.angle_of_descent((0,0), (0,10), radius=500, height=49000))
         # What happens when we are a long way off
-        self.assertEqual(0, heading.angle_of_descent((0,0), (0,160), radius=500, height=300000))
+        self.assertEqual(12, heading.angle_of_descent((0,0), (0,160), radius=500, height=300000))
         
 
+        
 
 if __name__ == "__main__":
     unittest.main()
