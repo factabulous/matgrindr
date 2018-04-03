@@ -9,7 +9,7 @@ import sys
 import requests
 import traceback
 import re
-from util import debug
+from util import debug, error
 
 class MatsLoader(threading.Thread):
     """
@@ -114,7 +114,7 @@ class MatsLoaderRemote(threading.Thread):
                     self.queue.put( { 'mats': res } )
                     debug("Async remote mats loader from tsv is completed {} entries".format(len(res)))
                 else:
-                    debug("Async remote mats loader failed - zero records")
+                    error("Async remote mats loader failed - zero records")
             else:
                 with open(self.filename, "rt") as cache_file:
                     res = json.load(cache_file)
