@@ -14,7 +14,7 @@ import plug
 import heading
 import version
 from sys import platform
-from util import GridHelper, debug
+from util import GridHelper, debug, error
 from ttkHyperlinkLabel import HyperlinkLabel
 
 this = sys.modules[__name__]	# For holding module globals
@@ -86,7 +86,7 @@ def update():
                 debug("Mats reload requested")
                 this.mats.reload(status['mats'])
             if 'error' in status:
-                debug("Error: " + status['error'])
+                error("Error: " + status['error'])
                         
             this.status_frame.update_idletasks()
     except Queue.Empty:
@@ -140,6 +140,11 @@ def copy_system_to_clipboard(event):
        window.clipboard_clear()  # clear clipboard contents
        window.clipboard_append(this.target['system'])
 
+def skip_target(event):
+    if this.target:
+        this.visited(this.target)
+        update_target(this.events.find_location())
+
 def blank_field(value):
     """
     Blanks a field to indicate 'no value present'
@@ -180,10 +185,10 @@ def plugin_app(parent):
     icon_frame.grid(row=h.row(), column = h.col())
     this.clipboard = tk.Label(icon_frame, anchor=tk.W, image=this._IMG_CLIPBOARD)
     this.skip = tk.Label(icon_frame, anchor=tk.W, image=this._IMG_SKIP)
-    #this.clipboard.grid(row=h.row(), column=h.col())
     this.clipboard.pack(side=tk.LEFT)
     this.skip.pack(side=tk.LEFT)
     this.clipboard.bind("<Button-1>", copy_system_to_clipboard)
+    this.skip.bind("<Button-1>", skip_target)
 
     h.newrow()
     tk.Label(this.status_frame, text="What").grid(row=h.row(), column = h.col(), sticky=tk.W)
@@ -258,7 +263,7 @@ def update_target(res):
         this.action.set(res[0])
         if len(res) > 1:
             this.target = res[1]
-            this.type.set(this.target['type'])
+            this.type.set("{} ({})".format(this.target['type'], this.target['id']))
             if len(res) > 2:
                 show_latlon = res[2]
                 if show_latlon:
