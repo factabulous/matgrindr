@@ -1,3 +1,4 @@
 debug.txt
 *.pyo
 mats-cache.json
+__pycache__
