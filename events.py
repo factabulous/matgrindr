@@ -169,9 +169,10 @@ class EventEngine():
 
             return self.find_location()
 
-    def find_location(self):
+    def find_location(self, current_target = None):
         """
-        Finds where we should be heading bass upon the current location state
+        Finds where we should be heading based the current location state
+        current_target is where we are currently headed, can be None
         """
 
         debug("find_location - location is {}".format(self._location._loc))
@@ -188,6 +189,10 @@ class EventEngine():
         if self._location.has_system():
             distance, closest = self._materials.closest(self._location.pos(), self._requirements)
             if self._location.has_body():
+                # If we are already heading to a location then stick with it, 
+                # don't flip between targets on a body as they get close
+                if current_target and not self._visited.is_visited(current_target):
+                    return current_target
                 # See if there is another location on this body
                 local = self._materials.local(self._location.system(), self._location.body())
                 if local:

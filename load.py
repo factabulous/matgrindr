@@ -250,7 +250,7 @@ def plugin_app(parent):
 
 def journal_entry(cmdr, is_beta, system, station, entry, state):
     res = this.events.process(entry, state)
-    update_target(res)
+    update_target(res, this.target)
 
 def update_target(res):
     """
