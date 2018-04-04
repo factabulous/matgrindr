@@ -29,7 +29,7 @@ def same(left, right):
     can be supplied in different cases - upper or lower). 
     returns True if they should be treated as the same
     """
-    return left.upper() == right.upper()
+    return str(left).upper() == str(right).upper()
 
 class GridHelper():
     """
