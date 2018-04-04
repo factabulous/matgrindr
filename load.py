@@ -142,7 +142,7 @@ def copy_system_to_clipboard(event):
 
 def skip_target(event):
     if this.target:
-        this.visited(this.target)
+        this.visited.set_visited(this.target)
         update_target(this.events.find_location())
 
 def blank_field(value):
