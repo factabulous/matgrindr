@@ -1,3 +1,9 @@
+0.0.6 alpha
+---
+
+Issue with numeric body names wheer they would stop you calculating a next destination
+
+
 0.0.5 alpha
 ---
 
