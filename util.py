@@ -14,7 +14,7 @@ def debug(str):
     Output debug information to the EDMC logfile - prepends the 
     plugin name
     """
-    if False:
+    if os.path.exists(local_file("debug.txt")):
         print('[matgrindr] ' + str)
 
 def local_file(name):
