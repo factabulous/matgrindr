@@ -126,7 +126,7 @@ class EventEngine():
 
         Body is reported by:
             Location
-            SupercruiseExit
+            ApproachBody
         Latitude is reported by:
             Location
             Liftoff
@@ -140,7 +140,7 @@ class EventEngine():
             Location
             StartJump
             SupercruiseEntry
-            SupercruiseExit
+            ApproachBody
         """
 
         debug("[matgrindr] Event {}".format(entry['event']))
@@ -148,7 +148,7 @@ class EventEngine():
         params = self.make_params(entry, state)
         location_changed = False
         system_ev = ['FSDJump', 'Location', 'StartUp', 'LoadGame']
-        body_ev = ['SupercruiseExit', 'Location', 'StartUp', 'LoadGame']
+        body_ev = ['ApproachBody', 'Location', 'StartUp', 'LoadGame']
         latlon_ev = ['Touchdown', 'Location', 'Liftoff', 'StartUp', 'LoadGame']
 
         if self.is_event_with_params(params, system_ev + body_ev + latlon_ev, ['StarSystem', 'StarPos']):
@@ -192,12 +192,14 @@ class EventEngine():
                 # If we are already heading to a location then stick with it, 
                 # don't flip between targets on a body as they get close
                 if current_target and not self._visited.is_visited(current_target):
-                    return current_target
+                    return ("Land at target", current_target, True)
                 # See if there is another location on this body
                 local = self._materials.local(self._location.system(), self._location.body())
                 if local:
                     debug("More mats on same body")
-                    return ("Travel to new coordinates", local[0], True)
+                    return ("Land at target", local[0], True)
+                else:
+                    print("No more mats local to this body {}".format(self._location.body()))
             if closest and same(closest['system'], self._location.system()):
                 debug("in correct system")
                 return ("Supercruise to {} {}".format(closest['system'], closest['body']), closest, True)

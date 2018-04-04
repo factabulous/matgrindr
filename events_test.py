@@ -79,6 +79,25 @@ class EventsTest(unittest.TestCase):
         ev = events.EventEngine(mats, None, NoneVisited())
         self.assertEqual(("Supercruise to Sol Venus", mats.res, True), ev.process( { 'event': 'Location', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol'}, {} ))
 
+    def test_approach_body_event_correct_system(self):
+        """
+        test when system and body do match we ask for the coordinates
+        to go to
+        """
+        mats = FakeMaterials('Sol', 'Venus', 12, 15, [ 'Iron' ] )
+        ev = events.EventEngine(mats, None, NoneVisited())
+        self.assertEqual(("Land at target", mats.res, True), ev.process( { 'event': 'ApproachBody', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol','Body': 'Venus'}, {} ))
+
+    def test_approach_body_event_correct_system_already_targeted(self):
+        """
+        test when system and body match but we're already targeting a location
+        then we just keep targeting that, so we don't jump around.
+        """
+        current_target = { 'target': 'fake' }
+        mats = FakeMaterials('Sol', 'Venus', 12, 15, [ 'Iron' ] )
+        ev = events.EventEngine(mats, None, NoneVisited())
+        self.assertEqual(("Land at target", current_target, True), ev.process( { 'event': 'ApproachBody', 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol','Body': 'Venus'}, {}, current_target ))
+
     def test_startup_event_correct_system(self):
         """
         test when systems do match we ask for the planet(s) to show
@@ -135,7 +154,7 @@ class EventsTest(unittest.TestCase):
         """
         mats = FakeMaterials('Sol', 'Mercury', lat=1, lon=2)
         ev = events.EventEngine(mats, None, NoneVisited())
-        self.assertEqual(("Travel to new coordinates", mats.res, True), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol', 'Body': 'Mercury'} ))
+        self.assertEqual(("Land at target", mats.res, True), ev.process( { 'event': 'Liftoff'}, { 'StarPos': [ 0, 0, 0] , 'StarSystem': 'Sol', 'Body': 'Mercury'} ))
 
     def test_short_body(self):
         mats = FakeMaterials('Sol', 'Mercury')
