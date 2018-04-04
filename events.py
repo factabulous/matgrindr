@@ -114,7 +114,7 @@ class EventEngine():
             return True
         return False
 
-    def process(self, entry, state):
+    def process(self, entry, state, current_target = None):
         """
         Decides what we should do given a new journal event. Returns either
         None or a tuple with fields indicating what has updated. Contains
@@ -167,7 +167,7 @@ class EventEngine():
             keys = ['StarPos', 'StarSystem', 'Body', 'Latitude', 'Longitude']
             self.report_keys(entry, state, keys)
 
-            return self.find_location()
+            return self.find_location(current_target)
 
     def find_location(self, current_target = None):
         """

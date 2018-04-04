@@ -21,6 +21,7 @@ this = sys.modules[__name__]	# For holding module globals
 
 this.status_queue = Queue.Queue()
 this.display_hud_elements = False
+this.target = None
 
 #this.debug = True if platform == 'darwin' else False
 this.NO_VALUE = "---" # Used when we don't have a value for a field
@@ -249,8 +250,8 @@ def plugin_app(parent):
     return this.status_frame
 
 def journal_entry(cmdr, is_beta, system, station, entry, state):
-    res = this.events.process(entry, state)
-    update_target(res, this.target)
+    res = this.events.process(entry, state, this.target)
+    update_target(res)
 
 def update_target(res):
     """
