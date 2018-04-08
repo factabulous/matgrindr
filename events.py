@@ -184,7 +184,7 @@ class EventEngine():
                 debug("Found a resource on planet")
                 mats = set(target['materials']).intersection(self._requirements)
                 self._visited.set_visited(target)
-                return ("Collect "+",".join(mats),target, False)
+                return ("Collect "+", ".join(mats),target, False)
 
         if self._location.has_system():
             distance, closest = self._materials.closest(self._location.pos(), self._requirements)

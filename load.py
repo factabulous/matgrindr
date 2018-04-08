@@ -179,7 +179,7 @@ def plugin_app(parent):
 
     # Current Action being recommended 
     this.action = tk.StringVar() 
-    tk.Label(this.status_frame, textvariable=this.action).grid(row=h.row(), column = h.col(3), columnspan=3, sticky=tk.W)
+    tk.Label(this.status_frame, textvariable=this.action, wraplength=200, justify=tk.LEFT).grid(row=h.row(), column = h.col(3), columnspan=3, sticky=tk.W)
 
     # Put the icons in the same grid pos in their own frame
     icon_frame = tk.Frame(this.status_frame);
