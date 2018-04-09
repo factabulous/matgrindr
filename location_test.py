@@ -65,8 +65,7 @@ class LocationTest(unittest.TestCase):
         loc = location.Location()
         loc.change_system("Sol", (1, 2, 3))
         self.assertTrue(loc.is_changed())
-        loc.get() # Should reset dirty flag
-        self.assertFalse(loc.is_changed())
+        self.assertFalse(loc.is_changed()) # Reading the flag should reset it
         loc.change_system("Sol", (1, 2, 3))
         # Still not dirty - is same system
         self.assertFalse(loc.is_changed())

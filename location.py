@@ -84,16 +84,21 @@ class Location():
 
     def get(self):
         """
-        Returns a copy of the location info
+        Returns a copy of the location info - resets the dirty flag 
+        as it is assumed you now know the new state
         """
         self._is_dirty = False
         return self._loc.copy()
 
     def is_changed(self):
         """
-        Indicates if the location has changed since last read
+        Indicates if the location has changed since last read via get()
+        and also resets the 'changed' flag so a subsequent read will 
+        indicate no changes
         """
-        return self._is_dirty
+        changed = self._is_dirty
+        self._is_dirty = False
+        return changed
 
     def pos(self):
         """
