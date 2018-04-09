@@ -146,7 +146,6 @@ class EventEngine():
         debug("[matgrindr] Event {}".format(entry['event']))
 
         params = self.make_params(entry, state)
-        location_changed = False
         system_ev = ['FSDJump', 'Location', 'StartUp', 'LoadGame']
         body_ev = ['ApproachBody', 'Location', 'StartUp', 'LoadGame']
         latlon_ev = ['Touchdown', 'Location', 'Liftoff', 'StartUp', 'LoadGame']
