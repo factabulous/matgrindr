@@ -45,14 +45,15 @@ class Materials():
             math.pow( mat['y'] - loc[1], 2) + 
             math.pow( mat['z'] - loc[2], 2))
 
-    def closest(self, loc, mats):
+    def closest(self, loc, mats, types = None):
         """
         Returns the closest site that contains any of the materials in the mats
         list. loc is a tuple / array of x,y,z coords
+        types can specify the set of type names that are wanted . None means all
         Returns a tuple with (distance, loc) - or (None, None)
         """
         mats = set(mats)
-        res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not self._visited or not self._visited.is_visited(mat)))
+        res = sorted( ( self.distance(mat, loc), mat) for mat in self._materials if set(mat['materials']).intersection(mats) and (not types or mat['type'] in types) and (not self._visited or not self._visited.is_visited(mat)))
         return res[0] if res else (None, None)
 
     def matches(self, loc):
