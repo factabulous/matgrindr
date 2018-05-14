@@ -65,6 +65,10 @@ class MaterialsTest(unittest.TestCase):
             "Zirconium" 
             ], m.names())
 
+    def test_types(self):
+        m = mats.Materials("mats_test.json", NoneVisited())
+        self.assertEqual(["Braintree", "Thargoid"], m.types())
+
     def test_closest(self):
         """
         Tests a system is chosen where the mat is present

@@ -29,6 +29,12 @@ class Materials():
             res.update(loc['materials'])
         return sorted(res)
 
+    def types(self):
+        """
+        Return the types of locations we can go to (sorted)
+        """
+        return sorted( set( [ x['type'] for x in self._materials ]))
+
     def distance(self, mat, loc):
         """
         Returns the distance between a mat (with coords in "x", "y", "z"
