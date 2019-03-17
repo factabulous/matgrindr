@@ -172,7 +172,7 @@ def plugin_app(parent):
     h = GridHelper()
     this.status_frame = tk.Frame(parent)
 
-    vcheck = version.Version("matgrindr")
+    vcheck = version.Version("matgrindr", "https://raw.githubusercontent.com/factabulous/matgrindr/master/VERSION.md")
     if vcheck.is_new_version():
         HyperlinkLabel(this.status_frame, url="https://github.com/factabulous/matgrindr", text="New matgrindr version available! Click here").grid(row=h.row(), column=h.col(4), columnspan=4)
         h.newrow()
