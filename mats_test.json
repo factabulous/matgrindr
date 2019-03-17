@@ -6,6 +6,7 @@
   "z": -311.03125,
   "lat": -4.8631,
   "lon": 3.0394,
+  "type": "Braintree",
   "materials": [ "Carbon", "Iron", "Nickel", "Phosphorus", "Sulphur", 
     "Chromium", "Manganese", "Zirconium", "Mercury", "Tungsten", 
     "Antimony" ]
@@ -15,5 +16,6 @@
   "x": 8613.09375,
   "y": -122.53125,
   "z": 2710.09375,
+  "type": "Thargoid",
   "materials": ["Iron","Sulphur","Carbon", "Nickel","Phosphorus","Chromium", "Manganese", "Germanium", "Antimony", "Tin", "Mercury"]
 }]

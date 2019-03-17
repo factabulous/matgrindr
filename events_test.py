@@ -14,7 +14,7 @@ class FakeMaterials():
                  'lat': self.lat, 'lon': self.lon, 'materials': self.mats,
                  'x': 0, 'y': 0, 'z': 0 }
 
-    def closest(self, pos1, pos2):
+    def closest(self, pos1, mats, types):
         if not self.system_name:
             return None
         return (12, self.res)

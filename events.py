@@ -21,13 +21,17 @@ class EventEngine():
         self._requirements = requirements
         self._visited = visited
         self._location = location.Location()
+        self._types = None
 
-    def change_requirements(self, requirements):
+    def change_requirements(self, requirements, types):
         """
         When the user changes what they want, use this to update the event
         engine
+        requirements - the materials we are interested in
+        types - the types of location to search for the requirements - None is all
         """
         self._requirements = requirements
+        self._types = types
 
     def keys_in(self, d, keys):
         """
@@ -186,7 +190,7 @@ class EventEngine():
                 return ("Collect "+", ".join(mats),target, False)
 
         if self._location.has_system():
-            distance, closest = self._materials.closest(self._location.pos(), self._requirements)
+            distance, closest = self._materials.closest(self._location.pos(), self._requirements, types = self._types)
             if self._location.has_body():
                 # If we are already heading to a location then stick with it, 
                 # don't flip between targets on a body as they get close

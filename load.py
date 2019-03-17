@@ -11,6 +11,7 @@ import Queue
 import watcher
 import visited
 import plug
+import ttk
 import heading
 import version
 from sys import platform
@@ -104,11 +105,26 @@ def select_none():
 
 def plugin_prefs(parent, cmdr, is_beta):
     frame = nb.Frame(parent)
-    nb.Label(frame, text="Select materials you want").grid(row = 0, column = 0)
+    nb.Label(frame, text="Select types of location you want to visit").grid(sticky=tk.W, row = 0, column = 0, columnspan = 2)
     this.settings = {}
+    this.types = {}
     selected = config.get("matgrindr.selected") or []
+    types = config.get("matgrindr.types") or []
 
     c = 0
+    debug("Types: " + str(this.mats.types()))
+    for type in this.mats.types():
+        this.types[type] = tk.IntVar()
+        this.types[type].set(1 if type in types else 0)
+        chk = nb.Checkbutton(frame, text=type, variable=this.types[type]).grid(sticky=tk.W, row = 1 + c // 2, column = c % 2, columnspan = 2)
+        c = c + 1
+
+    c = c + 2 - ( c % 2)
+    ttk.Separator(frame, orient=tk.HORIZONTAL).grid(row=1 + c //2, columnspan=2, padx=10, pady=2, sticky=tk.EW)
+    c = c + 2 - ( c % 2)
+
+    nb.Label(frame, text="Select materials you want").grid(sticky=tk.W, row = 1 + c // 2, column = c % 2)
+    c = c + 2 - ( c % 2)
     debug("Mats: " + str(this.mats.names()))
     for mat in this.mats.names():
         this.settings[mat] = tk.IntVar()
@@ -127,12 +143,17 @@ def prefs_changed(cmdr, is_beta):
     permanent storage
     """
     debug("Prefs changed")
+    types = []
+    for type in this.mats.types():
+        if this.types[type].get():
+            types.append(type)
+    config.set("matgrindr.types", types)
     res = []
     for mat in this.mats.names():
         if this.settings[mat].get():
             res.append(mat)
     config.set("matgrindr.selected", res)
-    this.events.change_requirements(res)
+    this.events.change_requirements(res, types)
 
     update_target(this.events.find_location())
 
