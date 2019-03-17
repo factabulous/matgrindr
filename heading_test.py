@@ -11,11 +11,11 @@ class HeadingTest(unittest.TestCase):
         self.assertEqual(185, heading.heading((90, 179), (0, 0)))
 
     def test_great_circle(self):
-        self.assertEqual(87, heading.great_circle((0, 0), (0, 10), 500))
-        self.assertEqual(87, heading.great_circle((0, 0), (0, -10), 500))
-        self.assertEqual(87, heading.great_circle((0, 0), (-10, 0), 500))
-        self.assertEqual(87, heading.great_circle((0, 0), (10, 0), 500))
-        self.assertEqual(174, heading.great_circle((0, 0), (0, 20), 500))
+        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (0, 10), 500), places=3)
+        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (0, -10), 500), places=3)
+        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (-10, 0), 500), places=3)
+        self.assertAlmostEqual(87.266, heading.great_circle((0, 0), (10, 0), 500), places=3)
+        self.assertAlmostEqual(174.533, heading.great_circle((0, 0), (0, 20), 500), places=3)
 
     def test_angle_of_descent(self):
         """

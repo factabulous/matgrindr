@@ -75,7 +75,7 @@ def dashboard_entry(cmdr, is_beta, entry):
                 ( this.target['lat'], this.target['lon']),
                 height = entry['Altitude'],
                 radius = this.target['radius'])
-            this.current_distance.set(info['distance'])
+            this.current_distance.set(int(info['distance']))
             this.target_heading.set( info['heading'] )
             this.target_attitude.set( info['descent_angle'])
 

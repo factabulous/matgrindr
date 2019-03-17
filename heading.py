@@ -23,7 +23,7 @@ def great_circle(start, end, radius):
 
     delta = 2 * asin( sqrt( 
         pow(sin(delta_lat / 2), 2) + cos(start[0]) * cos(end[0]) * pow(sin(delta_lon/2), 2)))
-    return int(radius * delta)
+    return (radius * delta)
 
 def angle_of_descent(start, end, height, radius):
     """
